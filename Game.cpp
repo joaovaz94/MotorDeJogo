@@ -1,5 +1,8 @@
 #include "Game.h"
 
+//Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
+Game *Game::instance = 0;
+
 //Definição de método de retornar instnacia de Game de acordo com padrãp Singleton
 Game& Game::GetInstance() {
 
