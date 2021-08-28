@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "include/Game.h"
 
 //Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
 //Game *Game::instance = 0;
