@@ -83,9 +83,15 @@ SDL_Renderer* Game::GetRenderer() {
 
 void Game::Run() {
     //Fazer loop de jogo
+    while(!state->QuitRequested()) {
     //Que faz
     //1. Verifica, controla e carrega as telas de jogo
     //2. Os dados de input são recebidos e processados
     //3. Osobjetos tem seus respectivos estados (posição, HP, ...)
+    state->Update(0);// Descobrir qual float passar como parametro
     //4. Os objetos são desenhados na tela
+    state->Render();
+    SDL_RenderPresent(renderer);
+    SDL_Delay(33);
+    } //Fim do Loop
 }

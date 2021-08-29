@@ -2,6 +2,8 @@
 #define SPRITE_H_INCLUDED
 
 #include <string>
+#define INCLUDE_SDL 
+#define INCLUDE_SDL_IMAGE
 #include "SDL_include.h"
 
 class Sprite {
@@ -20,6 +22,7 @@ class Sprite {
         void SetClip(int x, int y, int w, int h);
         void Render(int x, int y);
         int GetWidth();
+        int GetHeigth();
         bool IsOpen();
 };
 

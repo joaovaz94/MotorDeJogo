@@ -19,6 +19,8 @@ class Music {
         void Open(std::string file);
         bool IsOpen();
 
+        ~Music();
+
 };
 
 #endif //MUSIC_H_INCLUDED

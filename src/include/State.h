@@ -3,6 +3,8 @@
 
 #include "Sprite.h"
 #include "Music.h"
+#define INCLUDE_SDL 
+#include "SDL_include.h"
 
 
 class State {
