@@ -28,7 +28,8 @@ void Sprite::Open(std::string file) {
         std::cout << "Erro: " << SDL_GetError();
         throw "Erro ao carregar Sprite";
     }
-    int infTextura = SDL_QueryTexture(img,nullptr ,nullptr, &this->width, &this->height);
+    SDL_QueryTexture(img,nullptr ,nullptr, &this->width, &this->height);
+
 }
 
 void Sprite::SetClip(int x, int y, int w, int h) {
@@ -46,7 +47,7 @@ void Sprite::Render(int x, int y){
     posRect.w = this->clipRect.w;
     posRect.h = this->clipRect.h;
 
-    int renderizaCopia = SDL_RenderCopy(renderer,
+    SDL_RenderCopy(renderer,
                    this->texture,
                    &this->clipRect,
                    &posRect);

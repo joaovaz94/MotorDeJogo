@@ -62,6 +62,7 @@ Game::Game(std::string title, int widith, int height){
 
     //Criação de Renderizador para a Janela
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    this->renderer = renderer;
 }
 
 Game::~Game() {
