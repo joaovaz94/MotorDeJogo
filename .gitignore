@@ -33,3 +33,6 @@ joguinho
 *.exe
 *.out
 *.app
+
+#Arquivos de configuração do vscode
+.vscode
