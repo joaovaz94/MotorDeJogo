@@ -6,6 +6,7 @@
 //#include "SDL_mixer.h"
 #define INCLUDE_SDL_MIXER
 #define INCLUDE_SDL_IMAGE
+#define INCLUDE_SDL 
 #include "SDL_include.h"
 #include "State.h"
 #include <iostream>

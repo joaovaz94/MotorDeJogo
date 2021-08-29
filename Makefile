@@ -5,10 +5,10 @@
 # Compiler settings - Can be customized.
 CC = g++
 CXXFLAGS = -std=c++11 -Wall -g
-LDFLAGS = -lSDL2 -lGL -lGLEW
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer -lGL -lGLEW
 
 # Makefile settings - Can be customized.
-APPNAME = myapp
+APPNAME = joguinho
 EXT = .cpp
 SRCDIR = src
 OBJDIR = obj

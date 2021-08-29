@@ -1,12 +1,12 @@
 #include "include/Game.h"
 
 //Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
-//Game *Game::instance = 0;
+Game *Game::instance;
 
 //Definição de método de retornar instnacia de Game de acordo com padrãp Singleton
 Game& Game::GetInstance() {
 
-    if(instance == nullptr) {
+    if(Game::instance == nullptr) {
         instance = new Game("Janela", 640, 480);
     }
     return *instance;
@@ -30,6 +30,7 @@ Game::Game(std::string title, int widith, int height){
 
     //inicialização de biblioteca de imagens
     int flags_img = IMG_INIT_JPG | IMG_INIT_PNG;
+    //int iniciada_img = IMG_Init(flags_img);
     int iniciada_img = IMG_Init(flags_img);
     if((iniciada_img&flags_img) != flags_img) {
         std::cout << "Erro: " << IMG_GetError();
