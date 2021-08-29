@@ -25,7 +25,7 @@ void State::Render() {
     //Trata da Parte 4 de Game::Run
 
     //Não entendi muito bem
-    *this->bg->Render(this->bg.GetWidth(),this->bg.GetWidth());
+    bg.Render(this->bg.GetWidth(),this->bg.GetWidth());
 }
 
 bool State::QuitRequested() {
