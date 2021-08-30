@@ -7,16 +7,17 @@ Game *Game::instance;
 Game& Game::GetInstance() {
 
     if(Game::instance == nullptr) {
-        instance = new Game("Janela", 640, 480);
+        Game::instance = new Game("Janela", 640, 480);
+        //throw  "Erro de lógica, jogo instanciado erroneamente\n";
     }
-    return *instance;
+    return *Game::instance;
 }
 
 //Construtor da instância Game
 Game::Game(std::string title, int widith, int height){
 
-    if(instance != nullptr) {
-        instance = this;
+    if(Game::instance != nullptr) {
+        Game::instance = this;
     }   
     else {
         throw  "Erro de lógica, jogo instanciado erroneamente\n";
