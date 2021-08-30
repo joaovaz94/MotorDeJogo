@@ -35,4 +35,4 @@ joguinho
 *.app
 
 #Arquivos de configuração do vscode
-.vscode
+.vscode/*
