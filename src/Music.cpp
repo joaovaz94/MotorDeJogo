@@ -18,7 +18,7 @@ void Music::Play(int times = -1) {
 
     if(mus == -1){
         std::cout << "Erro: " << Mix_GetError();
-        throw "Erro ao carregar Música";
+        std::cout << "Erro ao carregar Música";
     }
 }
 
@@ -32,7 +32,7 @@ void Music::Open(std::string file){
     Mix_Music* mus = Mix_LoadMUS(file.c_str());
     if(mus == nullptr){
         std::cout << "Erro: " << Mix_GetError();
-        throw "Erro ao abrir Música";
+        std::cout << "Erro ao abrir Música";
     }
 }
 

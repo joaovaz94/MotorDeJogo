@@ -26,7 +26,7 @@ void Sprite::Open(std::string file) {
     SDL_Texture* img = IMG_LoadTexture(renderer,file.c_str());
     if(img == nullptr){
         std::cout << "Erro: " << SDL_GetError();
-        throw "Erro ao carregar Sprite";
+        std::cout << "Erro ao carregar Sprite";
     }
     SDL_QueryTexture(img,nullptr ,nullptr, &this->width, &this->height);
 
