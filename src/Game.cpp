@@ -2,14 +2,14 @@
 #include <iostream>
 
 //Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
-Game *Game::instance;
+Game *Game::instance = nullptr;
 
 //Definição de método de retornar instnacia de Game de acordo com padrãp Singleton
 Game& Game::GetInstance() {
 
     if(Game::instance == nullptr) {
         Game::instance = new Game("Janela", 640, 480);
-        //throw  "Erro de lógica, jogo instanciado erroneamente\n";
+        std::cout << "Jogo iniciado em GetInstance";
     }
     return *Game::instance;
 }
@@ -18,11 +18,14 @@ Game& Game::GetInstance() {
 Game::Game(std::string title, int widith, int height){
 
     if(Game::instance != nullptr) {
-        Game::instance = this;
+        std::cout <<  "Erro de lógica, jogo instanciado erroneamente\n";
     }   
     else {
-        std::cout <<  "Erro de lógica, jogo instanciado erroneamente\n";
+        std::cout << "Jogo instanciado corretamente";
+        Game::instance = this;
     }
+    
+    Game::instance = this;
 
     //inicialização de biblioteca SDL
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0){
@@ -54,7 +57,7 @@ Game::Game(std::string title, int widith, int height){
     Mix_AllocateChannels(32);
 
     //Criação da Janela de Jogo
-    SDL_Window* window = SDL_CreateWindow(
+    Game::window = SDL_CreateWindow(
         "Janela do Joguinho",    //Título da janela
         SDL_WINDOWPOS_CENTERED, //Posição inicial de x
         SDL_WINDOWPOS_CENTERED, //Posição inicial de y
@@ -62,10 +65,18 @@ Game::Game(std::string title, int widith, int height){
         height,                    //Altura em pixels
         0                       //Flags para a janela
     );
+    if(Game::window == nullptr){
+        std::cout << "Erro ao iniciar janela";
+    }
 
     //Criação de Renderizador para a Janela
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    this->renderer = renderer;
+    Game::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if(Game::renderer == nullptr){
+        std::cout << "Erro ao iniciar renderizador";
+    }
+
+    this->state = new State();
+
 }
 
 Game::~Game() {

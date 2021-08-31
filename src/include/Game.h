@@ -20,7 +20,7 @@ class Game {
         SDL_Renderer* renderer;
         State* state;
         
-        Game(std::string title, int width, int height);
+        //Game(std::string title, int width, int height);
 
     public:
         ~Game();
@@ -28,6 +28,7 @@ class Game {
         SDL_Renderer* GetRenderer();
         State& GetState();
         static Game& GetInstance();
+        Game(std::string title, int width, int height);
 };
 
 #endif //GAME_H_INCLUDED 

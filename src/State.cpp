@@ -1,12 +1,14 @@
 #include "include/State.h"
 
 State::State() {
-    quitRequested = false;
-    bg = Sprite();
+    this->quitRequested = false;
+    this->bg = Sprite();
 }
 
 void State::LoadAssets() {
-    //A fazer ainda
+    this->bg = Sprite("./resources/img/ocean.jpg");
+    this->music = Music("./resources/audio/stageState.ogg");
+
 }
 
 void State::Update(float dt){
@@ -17,7 +19,7 @@ void State::Update(float dt){
     // ou Alt+F4 para mudar quitRequested = true
     //Talvez procurar SDL_PollEvent()
     if(SDL_QuitRequested()) {
-        quitRequested = true;
+        this->quitRequested = true;
     }
 }
 
