@@ -3,23 +3,25 @@
 
 Music::Music(){
 
-    music = nullptr;
+    this->music = nullptr;
 }
 
 Music::Music(std::string file){
 
-    music = nullptr;
+    this->music = nullptr;
     this->Open(file);
 }
 
 void Music::Play(int times = -1) {
 
-    int mus = Mix_PlayMusic(this->music, times);
-
-    if(mus == -1){
-        std::cout << "Erro: " << Mix_GetError();
-        std::cout << "Erro ao carregar Música";
+    std::cout << "musica: " << this->music << std::endl;
+    if(IsOpen()){
+        
+        if(Mix_PlayMusic(music, times) == -1) {
+            std::cout << "Problema em Mix_PlayMusic: " << Mix_GetError() << std::endl;
+        }
     }
+
 }
 
 void Music::Stop(int msToStop = 1500) {
@@ -29,11 +31,12 @@ void Music::Stop(int msToStop = 1500) {
 
 void Music::Open(std::string file){
 
-    Mix_Music* mus = Mix_LoadMUS(file.c_str());
+    Mix_Music *mus = Mix_LoadMUS(file.c_str());
     if(mus == nullptr){
         std::cout << "Erro: " << Mix_GetError();
         std::cout << "Erro ao abrir Música";
     }
+    this->music = mus;
 }
 
 bool Music::IsOpen() {

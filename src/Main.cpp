@@ -5,11 +5,9 @@
 
 int main(int argc, char** argv) {
 
-        std::cout << "programa iniciado";
         //Game *game = nullptr;
-        Game *game = new Game("Janela", 640, 480);
+        Game *game = new Game("João Paulo Vaz Mendes - 170002934", 1024, 600);
         *game = game->GetInstance();
-        std::cout << "jogo instanciado na mais";
         game->Run();
 
         delete game;

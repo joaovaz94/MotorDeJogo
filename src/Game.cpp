@@ -9,7 +9,7 @@ Game& Game::GetInstance() {
 
     if(Game::instance == nullptr) {
         Game::instance = new Game("Janela", 640, 480);
-        std::cout << "Jogo iniciado em GetInstance";
+        std::cout << "Jogo iniciado em GetInstance\n";
     }
     return *Game::instance;
 }
@@ -21,7 +21,7 @@ Game::Game(std::string title, int widith, int height){
         std::cout <<  "Erro de lógica, jogo instanciado erroneamente\n";
     }   
     else {
-        std::cout << "Jogo instanciado corretamente";
+        std::cout << "Jogo instanciado corretamente\n";
         Game::instance = this;
     }
     
@@ -57,8 +57,8 @@ Game::Game(std::string title, int widith, int height){
     Mix_AllocateChannels(32);
 
     //Criação da Janela de Jogo
-    Game::window = SDL_CreateWindow(
-        "Janela do Joguinho",    //Título da janela
+    this->window = SDL_CreateWindow(
+        title.c_str(),    //Título da janela
         SDL_WINDOWPOS_CENTERED, //Posição inicial de x
         SDL_WINDOWPOS_CENTERED, //Posição inicial de y
         widith,                    //Largura em pixels
@@ -70,7 +70,7 @@ Game::Game(std::string title, int widith, int height){
     }
 
     //Criação de Renderizador para a Janela
-    Game::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED);
     if(Game::renderer == nullptr){
         std::cout << "Erro ao iniciar renderizador";
     }
@@ -89,24 +89,24 @@ Game::~Game() {
 }
 
 State& Game::GetState() {
-    return *state;
+    return *(this->state);
 }
 
 SDL_Renderer* Game::GetRenderer() {
-   return renderer; 
+   return this->renderer; 
 }
 
 void Game::Run() {
     //Fazer loop de jogo
     while(!state->QuitRequested()) {
-    //Que faz
-    //1. Verifica, controla e carrega as telas de jogo
-    //2. Os dados de input são recebidos e processados
-    //3. Osobjetos tem seus respectivos estados (posição, HP, ...)
-    state->Update(0);// Descobrir qual float passar como parametro
-    //4. Os objetos são desenhados na tela
-    state->Render();
-    SDL_RenderPresent(renderer);
-    SDL_Delay(33);
+        //Que faz
+        //1. Verifica, controla e carrega as telas de jogo
+        //2. Os dados de input são recebidos e processados
+        //3. Osobjetos tem seus respectivos estados (posição, HP, ...)
+        state->Update(1);// Descobrir qual float passar como parametro
+        //4. Os objetos são desenhados na tela
+        state->Render();
+        SDL_RenderPresent(this->renderer);
+        SDL_Delay(33);
     } //Fim do Loop
 }
