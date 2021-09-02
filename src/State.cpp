@@ -1,18 +1,19 @@
 #include "include/State.h"
 #include <iostream>
 
-State::State() {
+State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/ocean.jpg") {
+//State::State() {
     this->quitRequested = false;
-    this->bg = Sprite();
-    this->music = Music();
+    //this->bg = Sprite();
+    //this->music = Music();
     this->LoadAssets();
-    //this->music.Play(1);
+    this->music.Play(-1);
 }
 
 void State::LoadAssets() {
-    this->bg = Sprite("./resources/img/ocean.jpg");
-    this->music = Music("./resources/audio/stageState.ogg");
-    //this->bg = Sprite("../resources/img/ocean.jpg");
+    //this->bg = Sprite("./resources/img/ocean.jpg");
+    //this->music = Music("./resources/audio/stageState.ogg");
+    //this->bg = Sprite("./resources/img/ocean.jpg");
     //this->music = Music("../resources/audio/stageState.ogg");
 
 }

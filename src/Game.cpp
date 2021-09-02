@@ -42,19 +42,6 @@ Game::Game(std::string title, int widith, int height){
         std::cout << "Erro ao iniciar suporte de jpg e png";
     }
     
-    //inicialização de biblioteca de audio
-    int flags_aud = MIX_INIT_MP3 | MIX_INIT_OGG;
-    int iniciada_aud = Mix_Init(flags_aud);
-    if((iniciada_aud&flags_aud) != flags_aud) {
-        std::cout << "Erro: " << Mix_GetError();
-        std::cout << "Erro ao iniciar suporte de mp3 e ogg";
-    }
-    if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS, 1024)) {
-        std::cout << "Erro: " << Mix_GetError();
-        std::cout << "Erro ao iniciar OpenAudio";
-    }
-    //Alocação do número de trilhas de audio
-    Mix_AllocateChannels(32);
 
     //Criação da Janela de Jogo
     this->window = SDL_CreateWindow(
@@ -74,6 +61,20 @@ Game::Game(std::string title, int widith, int height){
     if(Game::renderer == nullptr){
         std::cout << "Erro ao iniciar renderizador";
     }
+
+    //inicialização de biblioteca de audio
+    int flags_aud = MIX_INIT_MP3 | MIX_INIT_OGG;
+    int iniciada_aud = Mix_Init(flags_aud);
+    if((iniciada_aud&flags_aud) != flags_aud) {
+        std::cout << "Erro: " << Mix_GetError();
+        std::cout << "Erro ao iniciar suporte de mp3 e ogg";
+    }
+    if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS, 1024)) {
+        std::cout << "Erro: " << Mix_GetError();
+        std::cout << "Erro ao iniciar OpenAudio";
+    }
+    //Alocação do número de trilhas de audio
+    Mix_AllocateChannels(32);
 
     this->state = new State();
 
