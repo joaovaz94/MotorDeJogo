@@ -5,6 +5,9 @@
 #include "Music.h"
 #define INCLUDE_SDL 
 #include "SDL_include.h"
+#include "GameObject.h"
+#include <vector>
+#include <memory>
 
 
 class State {
@@ -13,9 +16,14 @@ class State {
         Sprite bg;
         Music music;
         bool quitRequested;
+        std::vector<std::unique_ptr<GameObject>> objectArray;
+
+        void Input();
+        void AddObject(int mouseX, int mouseY);
 
     public:
         State();
+        ~State();
 
         bool QuitRequested();
 

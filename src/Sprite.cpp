@@ -1,11 +1,12 @@
 #include "include/Sprite.h"
 #include "include/Game.h"
 
-Sprite::Sprite() {
+Sprite::Sprite(GameObject& associated): Component(associated) {
+
     texture = nullptr;
 }
 
-Sprite::Sprite(std::string file) {
+Sprite::Sprite(GameObject& associated, std::string file) : Sprite(associated) {
 
     texture = nullptr;
     this->Open(file);
