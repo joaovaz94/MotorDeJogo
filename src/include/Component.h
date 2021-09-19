@@ -3,6 +3,9 @@
 #define COMPONENT_H_INCLUDED
 
 #include <string>
+
+class Component;
+
 #include "GameObject.h"
 
 class Component

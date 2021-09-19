@@ -8,12 +8,18 @@ Face::Face(GameObject& associated) : Component(associated) {
 void Face::Damage(int damage) {
 
     this->hitpoints -= damage;
-    if(this->hitpoints <= 0) {
-        this->associated.RequestDelete();
-        if(this->associated.GetComponent("Sound")) {
-            Sound* som = (*Sound) this->associated.GetComponent("Sound");
+    if (this->hitpoints > 0)
+    {
+        return;
     }
-}
+    this->associated.RequestDelete();
+
+    Component *GOsom = this->associated.GetComponent("Sound");
+    //Sound *s = new Sound(GOsom);
+    if (GOsom != nullptr)
+    {
+        //GOsom->associated.GetComponent("Sound").Play();
+    }
 
 bool Face::Is(std::string type) {
 

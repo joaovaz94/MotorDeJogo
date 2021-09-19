@@ -41,3 +41,20 @@ Sound::~Sound() {
         Mix_FreeChunk(this->chunk);
     }
 }
+
+bool Sound::IsOpen() { 
+    return this->chunk != nullptr; 
+}
+
+bool Sound::Is(std::string type) { 
+    if (type == "Sound"){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+void Sound::Update(float dt) { if (dt) {} }
+
+void Sound::Render() {}
