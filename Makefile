@@ -1,69 +1,87 @@
-########################################################################
-####################### Makefile Template ##############################
-########################################################################
-
-# Compiler settings - Can be customized.
 CC = g++
-CXXFLAGS = -std=c++11 -Wall -g
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer -lGL -lGLEW
+RMDIR = rm -rf
+RM = rm -f
 
-# Makefile settings - Can be customized.
-APPNAME = joguinho
-EXT = .cpp
-SRCDIR = src
-OBJDIR = obj
+RUN = ./
 
-############## Do not change anything from here downwards! #############
-SRC = $(wildcard $(SRCDIR)/*$(EXT))
-OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
-DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
-# UNIX-based OS variables & settings
-RM = rm
-DELOBJ = $(OBJ)
-# Windows OS variables & settings
-DEL = del
-EXE = .exe
-WDELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
+DEP_FLAGS = -MT $@ -MMD -MP -MF $(DEP_PATH)/$*.d
 
-########################################################################
-####################### Targets beginning here #########################
-########################################################################
+DIRECTIVES = -std=c++11 -Wall -Wextra -c -I $(HEADER_PATH)
 
-all: $(APPNAME)
+LIBS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
 
-# Builds the app
-$(APPNAME): $(OBJ)
-	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+HEADER_PATH = include
+SRC_PATH = src
+BIN_PATH = bin
+DEP_PATH = dep
 
-# Creates the dependecy rules
-%.d: $(SRCDIR)/%$(EXT)
-	@$(CPP) $(CFLAGS) $< -MM -MT $(@:%.d=$(OBJDIR)/%.o) >$@
+CPP_FILES = $(wildcard $(SRC_PATH)/*.cpp)
+OBJ_FILES = $(addprefix $(BIN_PATH)/,$(notdir $(CPP_FILES:.cpp=.o)))
+DEP_FILES = $(wildcard $(DEP_PATH)/*.d)
 
-# Includes all .h files
--include $(DEP)
+EXEC = GAME
 
-# Building rule for .o files and its .c/.cpp in combination with all .h
-$(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
-	$(CC) $(CXXFLAGS) -o $@ -c $<
+ifeq ($(OS),Windows_NT)
 
-################### Cleaning rules for Unix-based OS ###################
-# Cleans complete project
-.PHONY: clean
+RMDIR = rd /s /q
+RM = del
+
+RUN =
+
+SDL_PATH = C:\SDL2\SDL2-2.0.5\x86_64-w64-mingw32
+
+DIRECTIVES += -I $(SDL_PATH)\include\SDL2
+
+LIBS = -L $(SDL_PATH)\lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lm
+
+EXEC := $(EXEC).exe
+
+else
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S), Darwin)
+LIBS = -lm -framework SDL2 -framework SDL2_image -framework SDL2_mixer -framework SDL2_ttf
+endif
+endif
+
+all: $(EXEC)
+
+$(EXEC): $(OBJ_FILES)
+	$(CC) -o $@ $^ $(LIBS)
+
+$(BIN_PATH)/%.o: $(SRC_PATH)/%.cpp
+
+ifeq ($(OS), Windows_NT)
+	@if not exist $(DEP_PATH) @mkdir $(DEP_PATH)
+	@if not exist $(BIN_PATH) @mkdir $(BIN_PATH)
+else
+	@mkdir -p $(DEP_PATH) $(BIN_PATH)
+endif
+
+	$(CC) $(DEP_FLAGS) -c -o $@ $< $(DIRECTIVES)
+
+print-% : ; @echo $* = $($*)
+
+debug: DIRECTIVES += -ggdb -O0 -DDEBUG
+debug: all
+
+dev: debug run
+
+gdb: RUN := gdb $(RUN)
+gdb: dev
+
+release: DIRECTIVES += -Ofast -mtune=native
+release: all
+
+run:
+	$(RUN)$(EXEC)
+
 clean:
-	$(RM) $(DELOBJ) $(DEP) $(APPNAME)
+	$(RMDIR) $(BIN_PATH) $(DEP_PATH)
+	$(RM) $(EXEC)
 
-# Cleans only all files with the extension .d
-.PHONY: cleandep
-cleandep:
-	$(RM) $(DEP)
+.PRECIOUS: $(DEP_PATH)/%.D
 
-#################### Cleaning rules for Windows OS #####################
-# Cleans complete project
-.PHONY: cleanw
-cleanw:
-	$(DEL) $(WDELOBJ) $(DEP) $(APPNAME)$(EXE)
+.PHONY: debug clean release
 
-# Cleans only all files with the extension .d
-.PHONY: cleandepw
-cleandepw:
-	$(DEL) $(DEP)
+-include $(DEP_FILES)
