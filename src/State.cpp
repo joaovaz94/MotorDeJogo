@@ -1,5 +1,9 @@
 #include "include/State.h"
 #include <iostream>
+#include "include/Face.h"
+#include "include/Vec2.h"
+
+#define float PI = 3.14159265358979f;
 
 State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/ocean.jpg") {
 //State::State() {
@@ -8,6 +12,10 @@ State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/o
     //this->music = Music();
     this->LoadAssets();
     this->music.Play(-1);
+}
+
+State::~State() {
+    this->objectArray.clear();
 }
 
 void State::LoadAssets() {
@@ -25,10 +33,10 @@ void State::Update(float dt){
     //Fazer condição de entender evento de apertar X na janela
     // ou Alt+F4 para mudar quitRequested = true
     //Talvez procurar SDL_PollEvent()
-    if(SDL_QuitRequested()) {
-        std::cout << "Pedir para fechar a janela de jogo\n";
-        this->quitRequested = true;
-    }
+    //if(SDL_QuitRequested()) {
+    //    std::cout << "Pedir para fechar a janela de jogo\n";
+    //    this->quitRequested = true;
+    //}
 }
 
 void State::Render() {
@@ -36,9 +44,84 @@ void State::Render() {
 
     //Não entendi muito bem
     //bg.Render(this->bg.GetWidth(),this->bg.GetWidth());
-    bg.Render(0,0);
+    //bg.Render(0,0);
+    for(int i = this.objectArray.begin(); i < this->objectArray.end(); i++){
+        this->objectArray.get(i).Render();
+    }
 }
 
 bool State::QuitRequested() {
     return quitRequested;
+}
+
+void State::Input() {
+	SDL_Event event;
+	int mouseX, mouseY;
+
+	// Obtenha as coordenadas do mouse
+	SDL_GetMouseState(&mouseX, &mouseY);
+
+	// SDL_PollEvent retorna 1 se encontrar eventos, zero caso contrário
+	while (SDL_PollEvent(&event)) {
+
+
+		// Se o evento for quit, setar a flag para terminação
+		if(event.type == SDL_QUIT) {
+			quitRequested = true;
+		}
+		
+		// Se o evento for clique...
+		if(event.type == SDL_MOUSEBUTTONDOWN) {
+
+			// Percorrer de trás pra frente pra sempre clicar no objeto mais de cima
+			for(int i = objectArray.size() - 1; i >= 0; --i) {
+				// Obtem o ponteiro e casta pra Face.
+				GameObject* go = (GameObject*) objectArray[i].get();
+				// Nota: Desencapsular o ponteiro é algo que devemos evitar ao máximo.
+				// O propósito do unique_ptr é manter apenas uma cópia daquele ponteiro,
+				// ao usar get(), violamos esse princípio e estamos menos seguros.
+				// Esse código, assim como a classe Face, é provisório. Futuramente, para
+				// chamar funções de GameObjects, use objectArray[i]->função() direto.
+
+				if(go->box.Contains( {(float)mouseX, (float)mouseY} ) ) {
+					Face* face = (Face*)go->GetComponent( "Face" );
+					if ( nullptr != face ) {
+						// Aplica dano
+						face->Damage(std::rand() % 10 + 10);
+						// Sai do loop (só queremos acertar um)
+						break;
+					}
+				}
+			}
+		}
+		if( event.type == SDL_KEYDOWN ) {
+			// Se a tecla for ESC, setar a flag de quit
+			if( event.key.keysym.sym == SDLK_ESCAPE ) {
+				this->quitRequested = true;
+			}
+			// Se não, crie um objeto
+			else {
+				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0 ) + Vec2( mouseX, mouseY );
+				AddObject((int)objPos.x, (int)objPos.y);
+			}
+		}
+	}
+}
+
+void State::AddObject(int mouseX, int mouseY) {
+
+    GameObject inimigo = new GameObject();
+    Sprite pinguin = new Sprite(&inimigo, "./resources/img/penguinface.png");
+    
+    inimigo->box.w = pinguin->GetWidth();
+    inimigo->box.h = pinguin->GetWidth();
+    inimigo->box.x = mouseX - (pinguin->box.w /2);
+    inimigo->box.y = mouseY - (pinguin->box.h /2);
+
+    Sound som_pinguin = new Sound(&inimigo, "./resources/audio/boom.wav" );
+
+    Face face_pinguin = new Face(&inimigo);
+
+    //colocar este objeto de penguin no vetor de objetos
+    this->objectArray.emplace_back((unique_ptr<GameObject>) inimigo);
 }
