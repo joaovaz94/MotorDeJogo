@@ -5,8 +5,9 @@
 #define INCLUDE_SDL 
 #define INCLUDE_SDL_IMAGE
 #include "SDL_include.h"
+#include "Component.h"
 
-class Sprite {
+class Sprite : public Component {
 
     private:
         SDL_Texture* texture;
@@ -15,15 +16,24 @@ class Sprite {
         SDL_Rect clipRect;
 
     public:
-        Sprite();
-        Sprite(std::string file);
+        Sprite(GameObject& associated);
+        Sprite(GameObject& associated, std::string file);
+        //Sprite();
+        //Sprite(std::string file);
         ~Sprite();
+
         void Open(std::string file);
         void SetClip(int x, int y, int w, int h);
-        void Render(int x, int y);
+        void Update(float dt) {};
+        void Render();
+        bool Is(std::string type);
+
         int GetWidth();
         int GetHeigth();
         bool IsOpen();
+
+    protected:
+        //GameObject& associated;
 };
 
 #endif //SPRITE_H_INCLUDED
