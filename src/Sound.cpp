@@ -10,7 +10,7 @@ Sound::Sound(GameObject& associated, std::string file) : Sound(associated) {
     this->Open(file);
 }
 
-void Sound::Play(int times=1) {
+void Sound::Play(int times) {
 
     int c = Mix_PlayChannel(-1,this->chunk,times - 1);
     if(c == -1){

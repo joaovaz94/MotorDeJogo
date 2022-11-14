@@ -10,11 +10,13 @@ public:
     Rect();
     Rect(float x, float y, float w, float h);
     ~Rect() {}
+
     float x;
     float y;
     float w;
     float h;
 
+    Vec2 Center();
     bool Contains(Vec2 vetor);
 };
 

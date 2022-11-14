@@ -37,10 +37,12 @@ void State::Update(float dt){
 	}
 
 	for (int i=0; i < (int)objectArray.size(); i++) {
+		//Tratamento pra quando a face morrer
 		if(objectArray[i].get()->IsDead()) {
 			objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Sprite"));
 			objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Face"));
 			Sound *soundToErase = (Sound *)objectArray[i].get()->GetComponent("Sound");
+			//soundToErase->Play(1);
 			if((!soundToErase->IsOpen()) || (soundToErase == nullptr)) {
 				objectArray[i].get()->RemoveComponent(soundToErase);
 				objectArray.erase(objectArray.begin() + i);

@@ -14,9 +14,11 @@ void Face::Damage(int damage) {
     this->hitpoints -= damage;
     if (this->hitpoints > 0)
     {
+		Sound *somDeMorte = (Sound *)associated.GetComponent("Sound");
+        this->associated.RequestDelete();
+        somDeMorte->Play(1);
         return;
     }
-    this->associated.RequestDelete();
 
     Component *GOsom = this->associated.GetComponent("Sound");
     //Sound *s = new Sound(GOsom);

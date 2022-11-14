@@ -24,3 +24,8 @@ bool Rect::Contains(Vec2 vetor) {
     }
     return false;
 }
+
+Vec2 Rect::Center() {
+    return Vec2((this->x + this->w)/2 , (this->y + this->h)/2 );
+}
+
