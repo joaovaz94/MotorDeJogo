@@ -11,6 +11,9 @@ class Face : public Component {
     public:
 
         Face(GameObject& associated);
+        ~Face();
+
+        std::string type = "Face";
 
         void Damage(int damage);
 

@@ -14,7 +14,7 @@ class Music {
         Music();
         Music(std::string file);
 
-        void Play(int times);
+        void Play(int times = -1);
         void Stop(int msToStop);
         void Open(std::string file);
         bool IsOpen();

@@ -3,6 +3,7 @@
 
 #include "Sprite.h"
 #include "Music.h"
+#include "Sound.h"
 #define INCLUDE_SDL 
 #include "SDL_include.h"
 #include "GameObject.h"
@@ -13,18 +14,18 @@
 class State {
 
     private:
-        Sprite bg;
-        Music music;
+        Sprite *bg;
+        Music *music;
         bool quitRequested;
         std::vector<std::unique_ptr<GameObject>> objectArray;
 
-        void Input();
-        void AddObject(int mouseX, int mouseY);
 
     public:
         State();
         ~State();
 
+        void Input();
+        void AddObject(int mouseX, int mouseY);
         bool QuitRequested();
 
         void LoadAssets();

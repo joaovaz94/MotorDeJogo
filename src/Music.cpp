@@ -12,7 +12,7 @@ Music::Music(std::string file){
     this->Open(file);
 }
 
-void Music::Play(int times = -1) {
+void Music::Play(int times ) {
 
     std::cout << "musica: " << this->music << std::endl;
     if(IsOpen()){

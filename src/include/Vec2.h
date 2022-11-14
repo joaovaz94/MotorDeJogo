@@ -7,12 +7,14 @@ private:
     /* data */
 public:
     Vec2(float x, float y);
-    ~Vec2();
+    ~Vec2() {}
 
     float x;
     float y;
 
-    void GetRotated(float rad);
+    Vec2 GetRotated(float rad);
+
+    Vec2 operator+(Vec2 const &vetor);
 };
 
 

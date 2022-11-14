@@ -18,17 +18,22 @@ class Sprite : public Component {
     public:
         Sprite(GameObject& associated);
         Sprite(GameObject& associated, std::string file);
+        //Sprite();
+        //Sprite(std::string file);
         ~Sprite();
 
         void Open(std::string file);
         void SetClip(int x, int y, int w, int h);
-        void Render(int x, int y);
+        void Update(float dt) {};
+        void Render();
+        bool Is(std::string type);
+
         int GetWidth();
         int GetHeigth();
         bool IsOpen();
 
     protected:
-        GameObject& associated;
+        //GameObject& associated;
 };
 
 #endif //SPRITE_H_INCLUDED

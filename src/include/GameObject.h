@@ -4,13 +4,16 @@
 #include "Component.h"
 #include <string>
 #include <vector>
+#include <memory>
 #include "Rect.h"
+
+class Component;
 
 class GameObject
 {
     private:
         /* data */
-        std::vector<Component*> components;
+        std::vector<std::unique_ptr <Component>> components;
         bool isDead;
 
     public:

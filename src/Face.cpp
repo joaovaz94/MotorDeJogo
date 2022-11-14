@@ -5,6 +5,10 @@ Face::Face(GameObject& associated) : Component(associated) {
     this->hitpoints = 30;
 }
 
+Face::~Face() {
+
+}
+
 void Face::Damage(int damage) {
 
     this->hitpoints -= damage;
@@ -20,6 +24,15 @@ void Face::Damage(int damage) {
     {
         //GOsom->associated.GetComponent("Sound").Play();
     }
+}
+
+void Face::Update(float dt){
+
+}
+
+void Face::Render() {
+
+}
 
 bool Face::Is(std::string type) {
 

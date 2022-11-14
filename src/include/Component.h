@@ -4,7 +4,8 @@
 
 #include <string>
 
-class Component;
+//class Component;
+class GameObject;
 
 #include "GameObject.h"
 
@@ -16,11 +17,12 @@ class Component
     public:
 
         Component(GameObject& associated);
-        virtual ~Component();
+        virtual ~Component() {}
 
-        virtual void Update() = 0;
-        virtual void Render() = 0;
-        virtual bool Is(std::string type) = 0;
+        std::string type;
+        void virtual Update(float dt) = 0;
+        void virtual Render() = 0;
+        bool virtual Is(std::string type) = 0;
     
     protected:
 

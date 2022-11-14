@@ -2,16 +2,23 @@
 #include <iostream>
 #include "include/Face.h"
 #include "include/Vec2.h"
+#include <math.h>
 
-#define float PI = 3.14159265358979f;
+const double PI = M_PI;
 
-State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/ocean.jpg") {
-//State::State() {
+
+//State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/ocean.jpg") {
+State::State() {
     this->quitRequested = false;
-    //this->bg = Sprite();
-    //this->music = Music();
-    this->LoadAssets();
-    this->music.Play(-1);
+	GameObject *gameObject = new GameObject();
+	bg = new Sprite(*gameObject, "assets/img/ocean.jpg");
+
+	gameObject->AddComponent(bg);
+	objectArray.emplace_back(gameObject);
+	this->bg->Render();
+    //this->LoadAssets();
+	music = new Music("assets/audio/stageState.ogg");
+    music->Play(-1);
 }
 
 State::~State() {
@@ -19,24 +26,27 @@ State::~State() {
 }
 
 void State::LoadAssets() {
-    //this->bg = Sprite("./resources/img/ocean.jpg");
-    //this->music = Music("./resources/audio/stageState.ogg");
-    //this->bg = Sprite("./resources/img/ocean.jpg");
-    //this->music = Music("../resources/audio/stageState.ogg");
-
+	//
 }
 
 void State::Update(float dt){
-    //Tratará da parte 3 de Game::Run
+	Input();
 
-    //Retorna se apertou o x da janela ou Alt+F4
-    //Fazer condição de entender evento de apertar X na janela
-    // ou Alt+F4 para mudar quitRequested = true
-    //Talvez procurar SDL_PollEvent()
-    //if(SDL_QuitRequested()) {
-    //    std::cout << "Pedir para fechar a janela de jogo\n";
-    //    this->quitRequested = true;
-    //}
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		objectArray[i].get()->Update(dt);
+	}
+
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		if(objectArray[i].get()->IsDead()) {
+			objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Sprite"));
+			objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Face"));
+			Sound *soundToErase = (Sound *)objectArray[i].get()->GetComponent("Sound");
+			if((!soundToErase->IsOpen()) || (soundToErase == nullptr)) {
+				objectArray[i].get()->RemoveComponent(soundToErase);
+				objectArray.erase(objectArray.begin() + i);
+			}
+		}
+	}
 }
 
 void State::Render() {
@@ -45,14 +55,15 @@ void State::Render() {
     //Não entendi muito bem
     //bg.Render(this->bg.GetWidth(),this->bg.GetWidth());
     //bg.Render(0,0);
-    for(int i = this.objectArray.begin(); i < this->objectArray.end(); i++){
-        this->objectArray.get(i).Render();
+    for(int i = 0; i < (int)objectArray.size(); i++){
+        objectArray[i].get()->Render();
     }
 }
 
 bool State::QuitRequested() {
     return quitRequested;
 }
+
 
 void State::Input() {
 	SDL_Event event;
@@ -63,7 +74,6 @@ void State::Input() {
 
 	// SDL_PollEvent retorna 1 se encontrar eventos, zero caso contrário
 	while (SDL_PollEvent(&event)) {
-
 
 		// Se o evento for quit, setar a flag para terminação
 		if(event.type == SDL_QUIT) {
@@ -97,7 +107,7 @@ void State::Input() {
 		if( event.type == SDL_KEYDOWN ) {
 			// Se a tecla for ESC, setar a flag de quit
 			if( event.key.keysym.sym == SDLK_ESCAPE ) {
-				this->quitRequested = true;
+				quitRequested = true;
 			}
 			// Se não, crie um objeto
 			else {
@@ -110,18 +120,22 @@ void State::Input() {
 
 void State::AddObject(int mouseX, int mouseY) {
 
-    GameObject inimigo = new GameObject();
-    Sprite pinguin = new Sprite(&inimigo, "./resources/img/penguinface.png");
+    GameObject *inimigo = new GameObject();
+    Sprite *pinguin = new Sprite(*inimigo, "./assets/img/penguinface.png");
+	inimigo->AddComponent(pinguin);
     
+	//Adicionando a posicao de um GameObject
     inimigo->box.w = pinguin->GetWidth();
     inimigo->box.h = pinguin->GetWidth();
-    inimigo->box.x = mouseX - (pinguin->box.w /2);
-    inimigo->box.y = mouseY - (pinguin->box.h /2);
+    inimigo->box.x = mouseX - (inimigo->box.w /2);
+    inimigo->box.y = mouseY - (inimigo->box.h /2);
 
-    Sound som_pinguin = new Sound(&inimigo, "./resources/audio/boom.wav" );
+    Sound *som_pinguin = new Sound(*inimigo, "./assets/audio/boom.wav" );
+	inimigo->AddComponent(som_pinguin);
 
-    Face face_pinguin = new Face(&inimigo);
+    Face *face_pinguin = new Face(*inimigo);
+	inimigo->AddComponent(face_pinguin);
 
     //colocar este objeto de penguin no vetor de objetos
-    this->objectArray.emplace_back((unique_ptr<GameObject>) inimigo);
+    objectArray.emplace_back(inimigo);
 }
