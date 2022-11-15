@@ -1,4 +1,5 @@
 #include "include/Game.h"
+#include "include/Resources.h"
 #include <iostream>
 
 //Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
@@ -110,4 +111,9 @@ void Game::Run() {
         SDL_RenderPresent(this->renderer);
         SDL_Delay(33);
     } //Fim do Loop
+
+    //Liberar Recursos Carregados depois do Fim do Loop do Jogo
+    Resources::ClearImages();
+    Resources::ClearMusics();
+    Resources::ClearSounds();
 }

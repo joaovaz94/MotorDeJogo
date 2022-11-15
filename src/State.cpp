@@ -3,6 +3,8 @@
 #include "include/Face.h"
 #include "include/Vec2.h"
 #include <math.h>
+#include "include/TileSet.h"
+#include "include/TileMap.h"
 
 const double PI = M_PI;
 
@@ -10,13 +12,22 @@ const double PI = M_PI;
 //State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/ocean.jpg") {
 State::State() {
     this->quitRequested = false;
-	GameObject *gameObject = new GameObject();
-	bg = new Sprite(*gameObject, "assets/img/ocean.jpg");
+	GameObject *gameObjectFundo = new GameObject();
+	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
 
-	gameObject->AddComponent(bg);
-	objectArray.emplace_back(gameObject);
+	gameObjectFundo->AddComponent(bg);
+	objectArray.emplace_back(gameObjectFundo);
 	this->bg->Render();
-    //this->LoadAssets();
+
+	GameObject *gameObjectMap = new GameObject();
+
+	TileSet *tileset = new TileSet(64, 64, "assets/img/tileset.png");
+	TileMap *tilemap = new TileMap(*gameObjectMap, "assets/map/tileMap.txt", tileset);
+	gameObjectMap->AddComponent(tilemap);
+	gameObjectMap->box.x = 0;
+	gameObjectMap->box.y = 0;
+	objectArray.emplace_back(gameObjectMap);
+
 	music = new Music("assets/audio/stageState.ogg");
     music->Play(-1);
 }

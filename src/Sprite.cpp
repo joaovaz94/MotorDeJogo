@@ -11,12 +11,15 @@ Sprite::Sprite(GameObject& associated, std::string file) : Component(associated)
     //this->associated = associated;
     texture = nullptr;
     this->Open(file);
+
+    /*
     SetClip(0, 0, 1024, 600);
     SetClip(0, 0, width, height);
     associated.box.x = 0;
     associated.box.y = 0;
     associated.box.w = width;
     associated.box.h = height;
+    */
 
 }
 
@@ -43,8 +46,8 @@ void Sprite::Open(std::string file) {
 
     this->SetClip(0, 0,this->width,this->height);
 
-    std::cout << "Clip: x: " << this->clipRect.x  << "y: " << this->clipRect.y;
-    std::cout << "w: " << this->clipRect.w << "h: " << this->clipRect.h << std::endl;
+    //std::cout << "Clip: x: " << this->clipRect.x  << "y: " << this->clipRect.y;
+    //std::cout << "w: " << this->clipRect.w << "h: " << this->clipRect.h << std::endl;
 }
 
 void Sprite::SetClip(int x, int y, int w, int h) {
@@ -66,6 +69,20 @@ void Sprite::Render(){
         texture, &clipRect, & rct)){
             SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
         }
+}
+
+void Sprite::Render(int x, int y, int w, int h) {
+    SDL_Rect rct;
+    rct.x = x;
+    rct.y = y;
+    rct.w = w;
+    rct.h = h;
+
+    if(SDL_RenderCopy(Game::GetInstance().GetRenderer(),
+        texture, &clipRect, & rct)){
+            SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
+    }
+
 }
 
 bool Sprite::Is(std::string type){

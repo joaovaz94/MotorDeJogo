@@ -18,14 +18,13 @@ class Sprite : public Component {
     public:
         Sprite(GameObject& associated);
         Sprite(GameObject& associated, std::string file);
-        //Sprite();
-        //Sprite(std::string file);
         ~Sprite();
 
         void Open(std::string file);
         void SetClip(int x, int y, int w, int h);
         void Update(float dt) {};
         void Render();
+        void Render(int x, int y, int w, int h);
         bool Is(std::string type);
 
         int GetWidth();
