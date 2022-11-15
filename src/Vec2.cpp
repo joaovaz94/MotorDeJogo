@@ -19,3 +19,10 @@ Vec2 Vec2::operator+(Vec2 const &vetor) {
     aux.y = this->y + vetor.y;
     return aux;
 }
+
+Vec2 Vec2::operator-(Vec2 const &vetor) {
+    Vec2 aux = Vec2(0,0);
+    aux.x = this->x - vetor.x;
+    aux.y = this->y - vetor.y;
+    return aux;
+}

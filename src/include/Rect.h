@@ -18,6 +18,7 @@ public:
 
     Vec2 Center();
     bool Contains(Vec2 vetor);
+    float DistanciaCentros(Rect retangulo);
 };
 
 
