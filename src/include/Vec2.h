@@ -15,6 +15,7 @@ public:
     Vec2 GetRotated(float rad);
 
     Vec2 operator+(Vec2 const &vetor);
+    Vec2 operator-(Vec2 const &vetor);
 };
 
 

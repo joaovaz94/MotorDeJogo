@@ -1,4 +1,5 @@
 #include "include/Rect.h"
+#include <cmath>
 
 Rect::Rect() {
     this->x = 0;
@@ -29,3 +30,9 @@ Vec2 Rect::Center() {
     return Vec2((this->x + this->w)/2 , (this->y + this->h)/2 );
 }
 
+float Rect::DistanciaCentros(Rect retangulo) {
+    Vec2 centro1 = this->Center();
+    Vec2 centro2 = retangulo.Center();
+
+    return ( sqrt(pow(centro1.x - centro2.x, 2) + pow(centro1.y + centro2.y, 2) )*1.0 );
+}
