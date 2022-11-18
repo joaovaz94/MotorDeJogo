@@ -18,6 +18,9 @@ Game& Game::GetInstance() {
 //Construtor da instância Game
 Game::Game(std::string title, int widith, int height){
 
+    frameStart = 0;
+    dt = 0;
+
     if(Game::instance != nullptr) {
         std::cout <<  "Erro de lógica, jogo instanciado erroneamente\n";
     }   
@@ -101,11 +104,13 @@ SDL_Renderer* Game::GetRenderer() {
 void Game::Run() {
     //Fazer loop de jogo
     while(!state->QuitRequested()) {
+        CalculateDeltaTime();
         //Que faz
         //1. Verifica, controla e carrega as telas de jogo
         //2. Os dados de input são recebidos e processados
+        InputManager::GetInstance().Update();
         //3. Osobjetos tem seus respectivos estados (posição, HP, ...)
-        state->Update(1);// Descobrir qual float passar como parametro
+        state->Update(GetDeltaTime());// Descobrir qual float passar como parametro
         //4. Os objetos são desenhados na tela
         state->Render();
         SDL_RenderPresent(this->renderer);
@@ -116,4 +121,14 @@ void Game::Run() {
     Resources::ClearImages();
     Resources::ClearMusics();
     Resources::ClearSounds();
+}
+
+void Game::CalculateDeltaTime() {
+    int frameAntigo = frameStart;
+    frameStart = SDL_GetTicks();
+    dt = (frameStart - frameAntigo) / 1000.0;
+}
+
+float Game::GetDeltaTime() {
+    return dt;
 }

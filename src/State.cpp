@@ -5,6 +5,7 @@
 #include <math.h>
 #include "include/TileSet.h"
 #include "include/TileMap.h"
+#include "include/Camera.h"
 
 const double PI = M_PI;
 
@@ -17,7 +18,7 @@ State::State() {
 
 	gameObjectFundo->AddComponent(bg);
 	objectArray.emplace_back(gameObjectFundo);
-	this->bg->Render();
+	//this->bg->Render();
 
 	GameObject *gameObjectMap = new GameObject();
 
@@ -41,7 +42,21 @@ void State::LoadAssets() {
 }
 
 void State::Update(float dt){
-	Input();
+	//Input();
+	InputManager &input = InputManager::GetInstance();
+	Camera::Update(dt);
+
+	//Checar se o jogador apertou ESC para sair 
+	if(input.IsKeyDown(ESCAPE_KEY)) {
+		quitRequested = true;
+	}
+
+	//Se apertar espaço cria face de pinguin
+	if(input.IsKeyDown(SPACE_BAR_KEY)) {
+				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0 ) + Vec2( input.GetMouseX(), input.GetMouseY() );
+				AddObject((int)objPos.x, (int)objPos.y);
+	}
+
 
 	for (int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Update(dt);
@@ -77,7 +92,7 @@ bool State::QuitRequested() {
     return quitRequested;
 }
 
-
+/*
 void State::Input() {
 	SDL_Event event;
 	int mouseX, mouseY;
@@ -130,6 +145,7 @@ void State::Input() {
 		}
 	}
 }
+*/
 
 void State::AddObject(int mouseX, int mouseY) {
 
@@ -139,9 +155,9 @@ void State::AddObject(int mouseX, int mouseY) {
     
 	//Adicionando a posicao de um GameObject
     inimigo->box.w = pinguin->GetWidth();
-    inimigo->box.h = pinguin->GetWidth();
-    inimigo->box.x = mouseX - (inimigo->box.w /2);
-    inimigo->box.y = mouseY - (inimigo->box.h /2);
+    inimigo->box.h = pinguin->GetHeigth();
+    inimigo->box.x = mouseX + Camera::pos.x - (inimigo->box.w /2);
+    inimigo->box.y = mouseY + Camera::pos.y - (inimigo->box.h /2);
 
     Sound *som_pinguin = new Sound(*inimigo, "./assets/audio/boom.wav" );
 	inimigo->AddComponent(som_pinguin);

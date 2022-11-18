@@ -9,6 +9,7 @@
 #define INCLUDE_SDL 
 #include "SDL_include.h"
 #include "State.h"
+#include "InputManager.h"
 #include <iostream>
 #include <string>
 
@@ -19,6 +20,11 @@ class Game {
         SDL_Window* window;
         SDL_Renderer* renderer;
         State* state;
+
+        int frameStart;
+        float dt;
+
+        void CalculateDeltaTime();
         
         //Game(std::string title, int width, int height);
 
@@ -29,6 +35,8 @@ class Game {
         State& GetState();
         static Game& GetInstance();
         Game(std::string title, int width, int height);
+
+        float GetDeltaTime();
 };
 
 #endif //GAME_H_INCLUDED 

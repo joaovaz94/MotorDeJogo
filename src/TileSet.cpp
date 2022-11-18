@@ -17,7 +17,7 @@ TileSet::TileSet(int tileWidth, int tileHeight, std::string file) {
 
 void TileSet::RenderTile(unsigned index, float x, float y) {
 
-    if(index <= ((unsigned)(rows * colums)-1 )) {
+    if(index <= ((unsigned)(rows * colums)-1 ) ) {
 
         //Calculo de posição do Tile
         int posX = (index % colums) * tileWidth;
@@ -28,10 +28,11 @@ void TileSet::RenderTile(unsigned index, float x, float y) {
 
         //Renderizar o Tile na posição passada pela função
         tileSet->Render((int)x, (int)y, tileWidth, tileHeight);
+        //std::cout << "CERTO!! Índice"  << index <<"Renderizado!" << std::endl;
 
     }
     else {
-        std::cout << "ERRO!! Índice inexistente!" << std::endl;
+        //std::cout << "ERRO!! Índice"  << index <<"inexistente! x: " << x << " y: " << y<< std::endl;
     }
 }
 
