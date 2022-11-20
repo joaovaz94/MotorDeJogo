@@ -49,7 +49,7 @@ void State::Update(float dt){
 	Camera::Update(dt);
 
 	//Checar se o jogador apertou ESC para sair 
-	if(input.IsKeyDown(ESCAPE_KEY) ) {
+	if(input.IsKeyDown(ESCAPE_KEY) || input.QuitRequested()) {
 		quitRequested = true;
 	}
 
