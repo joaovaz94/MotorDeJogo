@@ -32,21 +32,21 @@ void Camera::Update(float dt) {
         pos = focus->box.Center();
     }
     else {
-        if(input.IsKeyDown(LEFT_ARROW_KEY )) {
+        if(input.IsKeyDown(LEFT_ARROW_KEY ) || input.IsKeyDown(A_KEY)) {
             speed = speed + Vec2(-1, 0);
         }
-        if(input.IsKeyDown(RIGHT_ARROW_KEY )) {
+        if(input.IsKeyDown(RIGHT_ARROW_KEY ) || input.IsKeyDown(D_KEY)) {
 
             speed = speed + Vec2(1, 0);
         }
-        if(input.IsKeyDown(UP_ARROW_KEY )) {
+        if(input.IsKeyDown(UP_ARROW_KEY ) || input.IsKeyDown(W_KEY)) {
 
             speed = speed + Vec2(0, -1);
         }
-        if(input.IsKeyDown(DOWN_ARROW_KEY )) {
+        if(input.IsKeyDown(DOWN_ARROW_KEY ) || input.IsKeyDown(S_KEY)) {
 
             speed = speed + Vec2(0, 1);
         }
-        pos = pos + (speed * dt * 100) ;
+        pos = pos + (speed * dt * 5) ;
     }
 }

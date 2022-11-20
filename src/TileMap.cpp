@@ -80,7 +80,7 @@ void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
 void TileMap::Render() {
     for(int camada=0; camada < this->GetDepth(); camada++) {
         //Deixa para implementar camera depois
-        this->RenderLayer(camada, Camera::pos.x, Camera::pos.y);
+        this->RenderLayer(camada, Camera::pos.x * ((camada * 0,3) +1), Camera::pos.y *((camada * 0.3 )+1) );
     }
 }
 
