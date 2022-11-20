@@ -6,7 +6,7 @@
 #include "include/TileSet.h"
 #include "include/TileMap.h"
 #include "include/Camera.h"
-
+#include "include/CameraFollower.h"
 const double PI = M_PI;
 
 
@@ -15,8 +15,10 @@ State::State() {
     this->quitRequested = false;
 	GameObject *gameObjectFundo = new GameObject();
 	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
+	CameraFollower *cameraFollower =  new CameraFollower(*gameObjectFundo);
 
 	gameObjectFundo->AddComponent(bg);
+	gameObjectFundo->AddComponent(cameraFollower);
 	objectArray.emplace_back(gameObjectFundo);
 	//this->bg->Render();
 
@@ -47,14 +49,14 @@ void State::Update(float dt){
 	Camera::Update(dt);
 
 	//Checar se o jogador apertou ESC para sair 
-	if(input.IsKeyDown(ESCAPE_KEY)) {
+	if(input.IsKeyDown(ESCAPE_KEY) ) {
 		quitRequested = true;
 	}
 
 	//Se apertar espaço cria face de pinguin
 	if(input.IsKeyDown(SPACE_BAR_KEY)) {
 				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0 ) + Vec2( input.GetMouseX(), input.GetMouseY() );
-				AddObject((int)objPos.x, (int)objPos.y);
+				AddObject((int)objPos.x + Camera::pos.x, (int)objPos.y + Camera::pos.x);
 	}
 
 
