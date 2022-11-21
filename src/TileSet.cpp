@@ -28,7 +28,6 @@ void TileSet::RenderTile(unsigned index, float x, float y) {
 
         //Renderizar o Tile na posição passada pela função
         tileSet->Render((int)x, (int)y, tileWidth, tileHeight);
-        //std::cout << "CERTO!! Índice"  << index <<"Renderizado!" << std::endl;
 
     }
     else {

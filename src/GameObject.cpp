@@ -2,7 +2,6 @@
 
 GameObject::GameObject () {
     this->isDead = false;
-    //this->box = Rect(0,0,0,0);//Tetativa de iniciar Rect
 }
 
 GameObject::~GameObject() {

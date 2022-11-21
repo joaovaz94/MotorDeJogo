@@ -59,16 +59,6 @@ void InputManager::Update() {
             default:
                 break;
             }
-           /*
-           if(evento.type == SDL_KEYDOWN){
-                    keyState[evento.key.keysym.sym] = true;
-                    keyUpdate[evento.key.keysym.sym] = updateCounter;
-                    std::cout << "seta pra baixo" << std::endl;
-           }
-           if(evento.type == SDL_KEYDOWN){
-                quitRequested = true;
-           }
-           */
     }
     
 }

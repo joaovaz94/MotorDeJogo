@@ -10,7 +10,6 @@
 const double PI = M_PI;
 
 
-//State::State() :music("./resources/audio/stageState.ogg"), bg("./resources/img/ocean.jpg") {
 State::State() {
     this->quitRequested = false;
 	GameObject *gameObjectFundo = new GameObject();
@@ -40,11 +39,9 @@ State::~State() {
 }
 
 void State::LoadAssets() {
-	//
 }
 
 void State::Update(float dt){
-	//Input();
 	InputManager &input = InputManager::GetInstance();
 	Camera::Update(dt);
 
@@ -83,8 +80,6 @@ void State::Render() {
     //Trata da Parte 4 de Game::Run
 
     //Não entendi muito bem
-    //bg.Render(this->bg.GetWidth(),this->bg.GetWidth());
-    //bg.Render(0,0);
     for(int i = 0; i < (int)objectArray.size(); i++){
         objectArray[i].get()->Render();
     }

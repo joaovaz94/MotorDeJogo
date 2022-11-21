@@ -3,24 +3,14 @@
 #include "include/Resources.h"
 
 Sprite::Sprite(GameObject &associated): Component(associated) {
-    //this->associated = associated;
     texture = nullptr;
 }
 
 Sprite::Sprite(GameObject& associated, std::string file) : Component(associated) {
 
-    //this->associated = associated;
     texture = nullptr;
     this->Open(file);
 
-    /*
-    SetClip(0, 0, 1024, 600);
-    SetClip(0, 0, width, height);
-    associated.box.x = 0;
-    associated.box.y = 0;
-    associated.box.w = width;
-    associated.box.h = height;
-    */
 
 }
 
@@ -31,17 +21,7 @@ Sprite::~Sprite() {
 void Sprite::Open(std::string file) {
     
 
-    //SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
-    //Ver melhor como passar o renderizador de Game
-    /*
-    SDL_Texture* img = IMG_LoadTexture(renderer,file.c_str());
-    if(img == nullptr){
-        std::cout << "Erro: " << SDL_GetError();
-        std::cout << "Erro ao carregar Sprite\n";
-    }
-    */
     texture = Resources::GetImage(file);
-    //std::cout << "Sprite: " << img << std::endl;
     SDL_QueryTexture(this->texture,nullptr ,nullptr, &this->width, &this->height);
 
     this->SetClip(0, 0,this->width,this->height);
@@ -50,8 +30,6 @@ void Sprite::Open(std::string file) {
     associated.box.w = width;
     associated.box.h = height;
 
-    //std::cout << "Clip: x: " << this->clipRect.x  << "y: " << this->clipRect.y;
-    //std::cout << "w: " << this->clipRect.w << "h: " << this->clipRect.h << std::endl;
 }
 
 void Sprite::SetClip(int x, int y, int w, int h) {
