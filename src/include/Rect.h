@@ -16,9 +16,15 @@ public:
     float w;
     float h;
 
+    Vec2 Posicao();
     Vec2 Center();
     bool Contains(Vec2 vetor);
     float DistanciaCentros(Rect retangulo);
+
+    void SetPosicao(float posX, float posY);
+    void SetPosicao(Vec2 novaPos);
+    void SetPosicaoCentro(float posCentroX, float posCentroY);
+    void SetPosicaoCentro(Vec2 NovaPos);
 };
 
 

@@ -7,6 +7,7 @@
 #include "include/TileMap.h"
 #include "include/Camera.h"
 #include "include/CameraFollower.h"
+#include "include/Alien.h"
 const double PI = M_PI;
 
 
@@ -31,8 +32,21 @@ State::State() {
 	gameObjectMap->box.y = 0;
 	objectArray.emplace_back(gameObjectMap);
 
+	//Criação de Alien no mapa
+	GameObject *gameObjectAliens = new GameObject();
+	int qtdMinions = 2;
+	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
+	gameObjectAliens->AddComponent(alien);
+	gameObjectAliens->box.SetPosicaoCentro(512,300);
+
+	objectArray.emplace_back(gameObjectAliens);
+
+	Camera::Follow(gameObjectAliens);
+	
 	music = new Music("assets/audio/stageState.ogg");
     music->Play(-1);
+
+	started = true;
 }
 
 State::~State() {
