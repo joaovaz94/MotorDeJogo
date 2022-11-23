@@ -7,6 +7,7 @@
 #define INCLUDE_SDL 
 #include "SDL_include.h"
 #include "GameObject.h"
+#include "InputManager.h"
 #include <vector>
 #include <memory>
 
@@ -24,7 +25,7 @@ class State {
         State();
         ~State();
 
-        void Input();
+        //void Input();
         void AddObject(int mouseX, int mouseY);
         bool QuitRequested();
 

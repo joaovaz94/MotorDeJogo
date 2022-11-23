@@ -2,6 +2,7 @@
 #define FACE_H_INCLUDED
 
 #include "Component.h"
+#include "InputManager.h"
 
 class Face : public Component {
     private:

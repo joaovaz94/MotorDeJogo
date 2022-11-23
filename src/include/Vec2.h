@@ -7,6 +7,7 @@ private:
     /* data */
 public:
     Vec2(float x, float y);
+    Vec2();
     ~Vec2() {}
 
     float x;
@@ -16,6 +17,7 @@ public:
 
     Vec2 operator+(Vec2 const &vetor);
     Vec2 operator-(Vec2 const &vetor);
+    Vec2 operator*(float num);
 };
 
 

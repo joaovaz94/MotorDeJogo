@@ -25,6 +25,10 @@ SDL_Texture *Resources::GetImage( std::string file) {
     else{
         //Senão aloca uma nova textura
         SDL_Texture *novaTextura = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
+        if(novaTextura == nullptr){
+            std::cout << "Erro: " << SDL_GetError();
+            std::cout << "Erro ao carregar Sprite\n";
+        }
         //Adiciona na Tabela
         imageTable.insert(std::make_pair(file, novaTextura));
         //E retorna na função
