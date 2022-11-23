@@ -3,6 +3,10 @@
 Component::Component(GameObject& associated) : associated(associated) {
 }
 
+void Component::Start() {
+
+}
+
 void Component::Update(float dt) {
 
 }

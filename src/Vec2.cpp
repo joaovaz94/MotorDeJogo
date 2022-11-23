@@ -18,6 +18,22 @@ Vec2 Vec2::GetRotated(float rad) {
     return Vec2(posX, posY);
 }
 
+float Vec2::GetMagnitude() {
+    return sqrt((x * x) + (y * y));
+}
+
+Vec2 Vec2::Normalize() {
+    float magnitude = this->GetMagnitude();
+    Vec2 aux = Vec2(x,y);
+    return (aux / magnitude);
+}
+
+float Vec2::DistanciaDoVetor(Vec2 &vetor) {
+    Vec2 aux = Vec2(0,0);
+    aux = *this - vetor;
+    return aux.GetMagnitude();
+}
+
 Vec2 Vec2::operator+(Vec2 const &vetor) {
     Vec2 aux = Vec2(0,0);
     aux.x = this->x + vetor.x;
@@ -38,3 +54,14 @@ Vec2 Vec2::operator*(float num) {
     aux.y = this->y * num;
     return aux;
 }
+
+Vec2 Vec2::operator/(float num) {
+    Vec2 aux = Vec2(0,0);
+    aux.x = this->x / num;
+    aux.y = this->y / num;
+    return aux;
+}
+
+//Artigos de referência: 
+//https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/vector-magnitude-normalization
+//https://www.khanacademy.org/computing/computer-programming/programming-natural-simulations/programming-vectors/a/more-vector-math

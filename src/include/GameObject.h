@@ -20,6 +20,7 @@ class GameObject
         GameObject();
         ~GameObject();
 
+        void Start();
         void Update(float dt);
         void Render();
         bool IsDead();
@@ -29,6 +30,7 @@ class GameObject
         Component* GetComponent(std::string type);
 
         Rect box;
+        bool started;
 };
 
 

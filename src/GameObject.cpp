@@ -2,6 +2,7 @@
 
 GameObject::GameObject () {
     this->isDead = false;
+    this->started = false;
 }
 
 GameObject::~GameObject() {
@@ -10,6 +11,14 @@ GameObject::~GameObject() {
     for(int i=cont -1; i >= 0; i--) {
         components.erase(components.begin() + i);
     }
+}
+
+void GameObject::Start() {
+
+    for(int i=0; i < (int)components.size(); i++) {
+        components[i]->Start();
+    }
+    started = true;
 }
 
 void GameObject::Update(float dt){

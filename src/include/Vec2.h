@@ -14,10 +14,14 @@ public:
     float y;
 
     Vec2 GetRotated(float rad);
+    float GetMagnitude();
+    Vec2 Normalize();
+    float DistanciaDoVetor(Vec2 &vetor);
 
     Vec2 operator+(Vec2 const &vetor);
     Vec2 operator-(Vec2 const &vetor);
     Vec2 operator*(float num);
+    Vec2 operator/(float num);
 };
 
 

@@ -12,6 +12,7 @@ const double PI = M_PI;
 
 State::State() {
     this->quitRequested = false;
+	started = false;
 	GameObject *gameObjectFundo = new GameObject();
 	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
 	CameraFollower *cameraFollower =  new CameraFollower(*gameObjectFundo);
@@ -38,6 +39,15 @@ State::~State() {
     this->objectArray.clear();
 }
 
+void State::Start() {
+	LoadAssets();
+
+	for(int i=0; i < (int)objectArray.size(); i++) {
+		objectArray[i].get()->Start();
+	}
+	started = true;
+}
+
 void State::LoadAssets() {
 }
 
@@ -51,11 +61,13 @@ void State::Update(float dt){
 	}
 
 	//Se apertar espaço cria face de pinguin
+	//Tirando Faces de pinguins pois não devem ser criadas
+	/*
 	if(input.IsKeyDown(SPACE_BAR_KEY)) {
 				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0 ) + Vec2( input.GetMouseX(), input.GetMouseY() );
 				AddObject((int)objPos.x + Camera::pos.x, (int)objPos.y + Camera::pos.x);
 	}
-
+	*/
 
 	for (int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Update(dt);
@@ -91,8 +103,18 @@ bool State::QuitRequested() {
 
 
 
-void State::AddObject(int mouseX, int mouseY) {
+std::weak_ptr< GameObject > State::AddObject(GameObject *go) {
 
+	std::shared_ptr< GameObject > ponteirpCompartilhado(go);
+	objectArray.push_back(ponteirpCompartilhado);
+
+	if(started) {
+		ponteirpCompartilhado->Start();
+	}
+	std::weak_ptr < GameObject > ptrRetorno(ponteirpCompartilhado);
+	return ptrRetorno;
+
+	/*
     GameObject *inimigo = new GameObject();
     Sprite *pinguin = new Sprite(*inimigo, "./assets/img/penguinface.png");
 	inimigo->AddComponent(pinguin);
@@ -111,4 +133,16 @@ void State::AddObject(int mouseX, int mouseY) {
 
     //colocar este objeto de penguin no vetor de objetos
     objectArray.emplace_back(inimigo);
+	*/
+}
+
+std::weak_ptr< GameObject > State::GetObjectPtr(GameObject *go) {
+	for(int i=0; i < (int)objectArray.size(); i++) {
+		if( objectArray[i].get() == go){
+			std::weak_ptr <GameObject> ptrRetorno(objectArray[i]);
+			return ptrRetorno;
+		}
+	}
+	std::weak_ptr <GameObject> ptrNulo;
+	return ptrNulo;
 }

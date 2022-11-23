@@ -103,6 +103,7 @@ SDL_Renderer* Game::GetRenderer() {
 
 void Game::Run() {
     //Fazer loop de jogo
+    state->Start();
     while(!state->QuitRequested()) {
         CalculateDeltaTime();
         //Que faz
