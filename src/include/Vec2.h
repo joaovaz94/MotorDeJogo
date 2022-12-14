@@ -1,6 +1,8 @@
 #ifndef VEC2_H_INCLUDED
 #define VEC2_H_INCLUDED
 
+#include <string>
+
 class Vec2
 {
 private:
@@ -12,6 +14,8 @@ public:
 
     float x;
     float y;
+
+    std::string toStr();
 
     Vec2 GetRotated(float rad);
     float GetMagnitude();

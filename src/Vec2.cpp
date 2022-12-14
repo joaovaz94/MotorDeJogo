@@ -11,6 +11,15 @@ Vec2::Vec2() {
     this->y = 0;
 }
 
+std::string Vec2::toStr() {
+    std::string aux = "";
+
+    aux += "x: " + std::to_string(this->x);
+    aux += " y: " + std::to_string(this->y);
+
+    return aux;
+}
+
 Vec2 Vec2::GetRotated(float rad) {
     float posX = ((this->x * cos(rad)) - (this->y * sin(rad)));
     float posY = ((this->y * cos(rad)) - (this->x * sin(rad)));

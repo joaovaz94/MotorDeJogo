@@ -37,11 +37,11 @@ State::State() {
 	int qtdMinions = 2;
 	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
 	gameObjectAliens->AddComponent(alien);
-	gameObjectAliens->box.SetPosicaoCentro(512,300);
+	//gameObjectAliens->box.SetPosicaoCentro(700,500);
+	gameObjectAliens->box.SetPosicaoCentro(Vec2(1024, 600) - Vec2(gameObjectAliens->box.x,gameObjectAliens->box.y));
 
 	objectArray.emplace_back(gameObjectAliens);
 
-	Camera::Follow(gameObjectAliens);
 	
 	music = new Music("assets/audio/stageState.ogg");
     music->Play(-1);
