@@ -38,7 +38,7 @@ State::State() {
 	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
 	gameObjectAliens->AddComponent(alien);
 	//gameObjectAliens->box.SetPosicaoCentro(700,500);
-	gameObjectAliens->box.SetPosicaoCentro(Vec2(1024, 600) - Vec2(gameObjectAliens->box.x,gameObjectAliens->box.y));
+	gameObjectAliens->box.SetPosicaoCentro(Vec2(512, 300) - Vec2(gameObjectAliens->box.x,gameObjectAliens->box.y));
 
 	objectArray.emplace_back(gameObjectAliens);
 

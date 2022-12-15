@@ -3,6 +3,7 @@
 #include "include/InputManager.h"
 #include "include/Camera.h"
 #include <iostream>
+#include <math.h>
 
 
  Alien::Action::Action(ActionType type, float x, float y) {
@@ -16,7 +17,7 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     Sprite *spriteAlien = new Sprite(associated, "assets/img/alien.png");
     associated.AddComponent(spriteAlien);
 
-    speed = Vec2(10,10);
+    speed = Vec2();
     hp = 10;
 
 
@@ -42,51 +43,63 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
             Action acaoAtirar(Action::ActionType::SHOOT, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
             taskQueue.push(acaoAtirar);
 
-            std::cout << "Alien mouse esquerdo" << std::endl;
+            //std::cout << "Alien mouse esquerdo" << std::endl;
         }
         if (input.MousePress(RIGHT_MOUSE_BUTTON)) {
             //Botão Direito deve movimentar alien para posição
             Action acaoMover(Action::ActionType::MOVE, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
+            //Action acaoMover(Action::ActionType::MOVE, (input.GetMouseX() ), (input.GetMouseY()));
             taskQueue.push(acaoMover);
-            std::cout << "Alien mouse direito" << std::endl;
+            //std::cout << "Alien mouse direito" << std::endl;
         }
         //std::cout << "Alien Ok 1" << std::endl;
-
+        
+        //Reseta a speed
+        speed = Vec2();
         //Checar se há alguma ação na fila
         if(taskQueue.size() > 0) {
-            for(int i=0; i < (int)taskQueue.size(); i++) {
-                Action acaoAtual = taskQueue.front();
+            Action acaoAtual = taskQueue.front();
 
-                std::cout << "Alien Ok 2" << std::endl;
-                if(acaoAtual.type == Action::ActionType::MOVE) {
-                    Vec2 destino = acaoAtual.pos - Vec2(associated.box.w /2,associated.box.h /2);
-                    Vec2 posAtual = associated.box.Center();
-                    std::cout << "destino: " << destino.toStr() << std::endl;
-                    std::cout << "posAtual: " << posAtual.toStr() << std::endl;
+            std::cout << "Acao tipo: "<< acaoAtual.type << std::endl;
+            std::cout << "posMouse: " << acaoAtual.pos.toStr() << std::endl;
+            if(acaoAtual.type == Action::ActionType::MOVE) {
+                Vec2 destino = acaoAtual.pos - (Vec2(associated.box.w, associated.box.h)/2);
+                Vec2 posAtual = associated.box.Posicao();
+                std::cout << "destino: " << destino.toStr() << std::endl;
+                std::cout << "posAtual: " << posAtual.toStr() << std::endl;
 
-                    //Calcular se o Alien já chega à posição no próximo frame
-                    Vec2 diferenca = destino - posAtual;
-                    diferenca = diferenca.Normalize();
-                    std::cout << "diferença: " << diferenca.toStr() << std::endl;
-                    float velLinear = 2;
-                    speed = diferenca;
-                    std::cout << "speed: " << diferenca.toStr() << std::endl;
-                    std::cout << "Alien Ok 3" << std::endl;
+                //Calcular se o Alien já chega à posição no próximo frame
+                //Vec2 diferenca = destino - posAtual;
+                //diferenca = diferenca.Normalize();
+                speed = (destino - posAtual).Normalize();
+                //std::cout << "diferença: " << diferenca.toStr() << std::endl;
+                //float velLinear = 300;
+                //speed = diferenca;
+                std::cout << "speed: " << speed.toStr() << std::endl;
+                //std::cout << "Magnitude diferenca: " << diferenca.GetMagnitude() << std::endl;
 
-                    associated.box.SetPosicaoCentro(associated.box.Center() + (speed * dt * velLinear));
+                //acho que o problema está aqui:
+                associated.box.SetPosicao(associated.box.Posicao() + (speed * dt * 300));
+                //Vec2 adicao = (speed * dt * velLinear);
+                //Vec2 comoVai = associated.box.Center() + adicao;
+                //associated.box.SetPosicaoCentro(comoVai);
 
-                    //senão tiver muito perto:
-                    if(speed.GetMagnitude() < 0.3) {
-                        associated.box.x = destino.x; 
-                        associated.box.y = destino.y; 
-                        taskQueue.pop();
-                    }
-                    std::cout << "Alien Ok 4" << std::endl;
-                }
-                if(acaoAtual.type == Action::ActionType::SHOOT) {
-                    //Ainda a implementar
+                std::cout << "Associated.box : " << associated.box.Center().toStr() << std::endl;
+                std::cout << "dt : " << dt << std::endl;
+                //std::cout << "Adicao : " << adicao.toStr() << std::endl;
+                //std::cout << "Como vai: " << comoVai.toStr() << std::endl;
+
+                //senão tiver muito perto:
+                if((destino - posAtual).GetMagnitude() < 10.0) {
+                    associated.box.x = destino.x; 
+                    associated.box.y = destino.y; 
                     taskQueue.pop();
                 }
+                std::cout << "Alien Ok 4" << std::endl;
+            }
+            if(acaoAtual.type == Action::ActionType::SHOOT) {
+                //Ainda a implementar
+                taskQueue.pop();
             }
         }
         //std::cout << "Alien no fim  do update" << std::endl;

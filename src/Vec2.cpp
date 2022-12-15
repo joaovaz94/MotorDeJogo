@@ -33,8 +33,8 @@ float Vec2::GetMagnitude() {
 
 Vec2 Vec2::Normalize() {
     float magnitude = this->GetMagnitude();
-    Vec2 aux = Vec2(x,y);
-    return (aux / magnitude);
+    //Vec2 aux = Vec2(x,y);
+    return Vec2(this->x / magnitude,this->y / magnitude);
 }
 
 float Vec2::DistanciaDoVetor(Vec2 &vetor) {
