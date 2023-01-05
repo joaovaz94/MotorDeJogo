@@ -34,11 +34,11 @@ State::State() {
 
 	//Criação de Alien no mapa
 	GameObject *gameObjectAliens = new GameObject();
-	int qtdMinions = 2;
+	int qtdMinions = 4;
 	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
 	gameObjectAliens->AddComponent(alien);
 	//gameObjectAliens->box.SetPosicaoCentro(700,500);
-	gameObjectAliens->box.SetPosicaoCentro(Vec2(512, 300) - Vec2(gameObjectAliens->box.x,gameObjectAliens->box.y));
+	gameObjectAliens->box.SetPosicao(Vec2(512, 300) - Vec2(gameObjectAliens->box.x,gameObjectAliens->box.y));
 
 	objectArray.emplace_back(gameObjectAliens);
 
@@ -90,14 +90,15 @@ void State::Update(float dt){
 	for (int i=0; i < (int)objectArray.size(); i++) {
 		//Tratamento pra quando a face morrer
 		if(objectArray[i].get()->IsDead()) {
-			objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Sprite"));
-			objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Face"));
-			Sound *soundToErase = (Sound *)objectArray[i].get()->GetComponent("Sound");
-			//soundToErase->Play(1);
-			if((!soundToErase->IsOpen()) || (soundToErase == nullptr)) {
-				objectArray[i].get()->RemoveComponent(soundToErase);
-				objectArray.erase(objectArray.begin() + i);
-			}
+			//objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Sprite"));
+			//objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Face"));
+			//Sound *soundToErase = (Sound *)objectArray[i].get()->GetComponent("Sound");
+			////soundToErase->Play(1);
+			//if((!soundToErase->IsOpen()) || (soundToErase == nullptr)) {
+			//	objectArray[i].get()->RemoveComponent(soundToErase);
+			//	objectArray.erase(objectArray.begin() + i);
+			//}
+			objectArray.erase(objectArray.begin() + i);
 		}
 	}
 }

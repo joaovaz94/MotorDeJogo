@@ -1,0 +1,54 @@
+#include "include/Bullet.h"
+#include "include/Sprite.h"
+#include <iostream>
+
+
+Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite) : Component(associated){
+
+    Sprite *spriteBullet = new Sprite(associated, sprite);
+    associated.AddComponent(spriteBullet);
+    std::cout << "Angulo Passado: " << angle << std::endl;
+    this->speed = Vec2(1,0).GetRotated(angle) * speed;
+    std::cout << "Bullet angle: " << this->speed.toStr() << std::endl;
+    distanceLeft = maxDistance;
+    this->damage = damage;
+    this->type = "Bullet";
+}
+
+
+void Bullet::Start() {}
+
+void Bullet::Update(float dt) {
+
+    if( distanceLeft <= 0) {
+        std::cout << "Acabou a distancia" << std::endl;
+        associated.RequestDelete();
+    }
+    else {
+        Vec2 deslocamento = (speed * dt);
+        associated.box.SetPosicaoCentro(associated.box.Posicao() + deslocamento);
+        //associated.box += deslocamento;
+        distanceLeft -= deslocamento.GetMagnitude();
+        //std::cout << "Bullet pos: " << associated.box.Posicao().toStr() << std::endl;
+        //std::cout << "Bullet distancia restante: " << distanceLeft << std::endl;
+    }
+
+}
+
+void Bullet::Render() {
+
+}
+
+bool Bullet::Is(std::string type) {
+
+    if(type == "Bullet") {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+int Bullet::GetDamage() {
+    return damage;
+}

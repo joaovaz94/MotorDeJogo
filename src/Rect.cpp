@@ -34,6 +34,10 @@ Vec2 Rect::Center() {
     return Vec2((this->x + this->w)/2 , (this->y + this->h)/2 );
 }
 
+Vec2 Rect::Medidas() {
+    return Vec2(this->w, this->h);
+}
+
 
 float Rect::DistanciaCentros(Rect retangulo) {
     Vec2 centro1 = this->Center();
@@ -66,4 +70,18 @@ void Rect::SetPosicaoCentro(Vec2 novaPos) {
 
     this->x = posX;
     this->y = posY;
+}
+
+Rect Rect::operator+(Vec2 const &vetor) {
+
+    float xAux = vetor.x;
+    float yAux = vetor.y;
+
+    Rect aux = Rect(xAux, yAux, this->w, this->h);
+
+    return aux;
+}
+
+Rect Rect::operator+=(Vec2 const &vetor) {
+    return *this + vetor;
 }

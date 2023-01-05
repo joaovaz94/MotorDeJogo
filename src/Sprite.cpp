@@ -15,18 +15,28 @@ Sprite::Sprite(GameObject& associated, std::string file) : Component(associated)
 }
 
 Sprite::~Sprite() {
-    SDL_DestroyTexture(texture);
 }
 
 void Sprite::Open(std::string file) {
     
-
     texture = Resources::GetImage(file);
-    SDL_QueryTexture(this->texture,nullptr ,nullptr, &this->width, &this->height);
+
+    //if(IsOpen()) {
+    //    SDL_LogError(0, "Nao foi possivel carregar textura: %s", IMG_GetError());
+    //}
+    if (SDL_QueryTexture(
+            this->texture,
+            nullptr ,
+            nullptr, 
+            &this->width, 
+            &this->height
+            ) != 0) 
+    {
+        SDL_LogError(0, "Não foi possivel Requerer textura: %s", IMG_GetError());
+    }
+
 
     this->SetClip(0, 0,this->width,this->height);
-    associated.box.x = 0;
-    associated.box.y = 0;
     associated.box.w = width;
     associated.box.h = height;
 

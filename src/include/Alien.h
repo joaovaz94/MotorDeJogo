@@ -24,6 +24,7 @@ class Alien : public Component{
 
         Vec2 speed;
         int hp;
+        int qtdMinions;
 
         std::queue<Action> taskQueue;
         std::vector <std::weak_ptr<GameObject>> minionArray;
