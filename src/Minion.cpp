@@ -14,7 +14,7 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
     std::shared_ptr<GameObject> alienObjeto = alienCenter.lock();
     this->type = "Minion";
 
-    associated.box.SetPosicao(alienObjeto->box.Posicao());
+    associated.box.SetPosicao(alienObjeto->box.Center() + (associated.box.Medidas() /2));
     //associated.AddComponent(spriteMinion);
 }
 
@@ -27,13 +27,14 @@ void Minion::Update(float dt) {
     float velocidadeAngular = 1 / (M_PI * 16);    
     Vec2 offsetPadrao = Vec2(200, 0);
     Vec2 centroMinion = associated.box.Medidas() /2;
-    Vec2 centroAlien = alienCenter.lock()->box.Posicao();
+    Vec2 centroAlien = alienCenter.lock()->box.Center();
     //std::cout << "Centro do minion: " << centroAlien.toStr() << std::endl;
     //Calculo da posição inicial do minion nesse update
     Vec2 posInicial = centroAlien - centroMinion + offsetPadrao.GetRotated(arc);
 
     arc += velocidadeAngular;
     associated.box.SetPosicao(posInicial);
+    associated.angleDeg = -(centroMinion.AnguloParaAlvo(centroAlien) * 180 / (M_PI));
 }
 
 void Minion::Render() {

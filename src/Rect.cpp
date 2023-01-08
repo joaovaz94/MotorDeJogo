@@ -31,7 +31,7 @@ Vec2 Rect::Posicao() {
 }
 
 Vec2 Rect::Center() {
-    return Vec2((this->x + this->w)/2 , (this->y + this->h)/2 );
+    return Vec2((this->x + this->w/2) , (this->y + this->h/2) );
 }
 
 Vec2 Rect::Medidas() {
