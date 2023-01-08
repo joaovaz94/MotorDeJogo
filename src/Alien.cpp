@@ -49,7 +49,6 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
 
     if(hp >= 0 ){
 	    InputManager &input = InputManager::GetInstance();
-        //std::cout << "Posicao Alien: " << associated.box.Posicao().toStr() << std::endl;
         //Conferir se houve input para  o Alien
         if (input.MousePress(LEFT_MOUSE_BUTTON)) {
             //Botão Esquerdo deve atirar
@@ -65,6 +64,8 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
         
         //Reseta a speed
         speed = Vec2();
+
+        associated.angleDeg += M_PI * dt * 6;
         //Checar se há alguma ação na fila
         if(taskQueue.size() > 0) {
             Action acaoAtual = taskQueue.front();
@@ -89,7 +90,9 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
             }
             if(acaoAtual.type == Action::ActionType::SHOOT) {
                 int minonAleatorio = rand() % qtdMinions;
-                std::shared_ptr<GameObject> minionApontado = minionArray[minonAleatorio].lock();
+                int minionMaisProximo = GetMinionProximo(acaoAtual.pos);
+                //std::shared_ptr<GameObject> minionApontado = minionArray[minonAleatorio].lock();
+                std::shared_ptr<GameObject> minionApontado = minionArray[minionMaisProximo].lock();
                 //std::cout << "Minion sorteado: " << minonAleatorio << std::endl;
                 Minion *minionObjeto = (Minion *)minionApontado->GetComponent("Minion");
                 minionObjeto->Shoot(acaoAtual.pos);
@@ -115,4 +118,17 @@ bool Alien::Is(std::string type) {
     else {
         return false;
     }
+}
+
+int Alien::GetMinionProximo(Vec2 posTiro) {
+    int maisProximo = 0;
+    float minimaDistancia = MAXFLOAT;
+    for(int i=0;i < (int)minionArray.size(); i++) {
+        float distanciaAtual = minionArray[i].lock()->box.Center().DistanciaDoVetor(posTiro); 
+        if (distanciaAtual < minimaDistancia) {
+            minimaDistancia = distanciaAtual;
+            maisProximo = i;
+        }
+    }
+    return maisProximo;
 }
