@@ -4,11 +4,13 @@
 
 Sprite::Sprite(GameObject &associated): Component(associated) {
     texture = nullptr;
+    scale = Vec2(1,1);
 }
 
 Sprite::Sprite(GameObject& associated, std::string file) : Component(associated) {
 
     texture = nullptr;
+    scale = Vec2(1,1);
     this->Open(file);
 
 
@@ -67,11 +69,11 @@ void Sprite::Render(int x, int y, int w, int h) {
     SDL_Rect rct;
     rct.x = x;
     rct.y = y;
-    rct.w = w;
-    rct.h = h;
+    rct.w = w * scale.x;
+    rct.h = h * scale.y;
 
-    if(SDL_RenderCopy(Game::GetInstance().GetRenderer(),
-        texture, &clipRect, & rct)){
+    if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
+        texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
             SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
     }
 
@@ -86,9 +88,23 @@ bool Sprite::Is(std::string type){
     }
 }
 
-int Sprite::GetWidth() { return this->width; }
+void Sprite::SetScaleX(float scaleX, float scaleY) {
+    if(scaleX == 0){
+        scaleX = scale.x;
+    }
+    if(scaleY == 0){
+        scaleY = scale.y;
+    }
+    scale = Vec2(scaleX, scaleY);
+}
 
-int Sprite::GetHeigth() { return this->height; }
+Vec2 Sprite::GetScale() {
+    return scale;
+}
+
+int Sprite::GetWidth() { return this->width * scale.x; }
+
+int Sprite::GetHeigth() { return this->height * scale.y; }
 
 bool Sprite::IsOpen() {
 

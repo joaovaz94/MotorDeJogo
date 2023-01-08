@@ -90,8 +90,10 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
             if(acaoAtual.type == Action::ActionType::SHOOT) {
                 int minonAleatorio = rand() % qtdMinions;
                 std::shared_ptr<GameObject> minionApontado = minionArray[minonAleatorio].lock();
+                //std::cout << "Minion sorteado: " << minonAleatorio << std::endl;
                 Minion *minionObjeto = (Minion *)minionApontado->GetComponent("Minion");
                 minionObjeto->Shoot(acaoAtual.pos);
+                //std::cout << "Posicao para tiro: " << acaoAtual.pos.toStr() << std::endl;
                 taskQueue.pop();
             }
         }

@@ -56,11 +56,12 @@ void Minion::Shoot(Vec2 pos) {
 
     Vec2 saidaBullet = associated.box.Center();
     float angulo = saidaBullet.AnguloParaAlvo(pos);
-    std::cout << "local de saida do tiro: " << saidaBullet.toStr() << std::endl;
+    //std::cout << "local de saida do tiro: " << saidaBullet.toStr() << std::endl;
     GameObject *objetoBullet = new GameObject();
 
     objetoBullet->box.SetPosicaoCentro(saidaBullet);
-    Bullet *bullet = new Bullet(*objetoBullet, angulo , 100, 10, 500,"assets/img/minionbullet1.png");
+    objetoBullet->angleDeg = -180 * angulo / M_PI;
+    Bullet *bullet = new Bullet(*objetoBullet, angulo , 300, 10, 800,"assets/img/minionbullet1.png");
     objetoBullet->AddComponent(bullet);
 
     State *state = &Game::GetInstance().GetState();

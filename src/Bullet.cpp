@@ -7,9 +7,9 @@ Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, flo
 
     Sprite *spriteBullet = new Sprite(associated, sprite);
     associated.AddComponent(spriteBullet);
-    std::cout << "Angulo Passado: " << angle << std::endl;
+    //std::cout << "Angulo Passado: " << angle << std::endl;
     this->speed = Vec2(1,0).GetRotated(angle) * speed;
-    std::cout << "Bullet angle: " << this->speed.toStr() << std::endl;
+    //std::cout << "Bullet angle: " << this->speed.toStr() << std::endl;
     distanceLeft = maxDistance;
     this->damage = damage;
     this->type = "Bullet";
@@ -21,13 +21,13 @@ void Bullet::Start() {}
 void Bullet::Update(float dt) {
 
     if( distanceLeft <= 0) {
-        std::cout << "Acabou a distancia" << std::endl;
+        //std::cout << "Acabou a distancia" << std::endl;
         associated.RequestDelete();
     }
     else {
         Vec2 deslocamento = (speed * dt);
-        associated.box.SetPosicaoCentro(associated.box.Posicao() + deslocamento);
-        //associated.box += deslocamento;
+        associated.box.SetPosicao(associated.box.Posicao() + deslocamento);
+        //associated.box += (speed * dt);
         distanceLeft -= deslocamento.GetMagnitude();
         //std::cout << "Bullet pos: " << associated.box.Posicao().toStr() << std::endl;
         //std::cout << "Bullet distancia restante: " << distanceLeft << std::endl;
