@@ -56,11 +56,11 @@ void Sprite::Render(){
     SDL_Rect rct;
     rct.x = associated.box.x; 
     rct.y = associated.box.y; 
-    rct.w = associated.box.w; 
-    rct.h = associated.box.h; 
+    rct.w = associated.box.w * scale.x; 
+    rct.h = associated.box.h * scale.y; 
 
-    if(SDL_RenderCopy(Game::GetInstance().GetRenderer(),
-        texture, &clipRect, & rct)){
+    if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
+        texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
             SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
         }
 }
