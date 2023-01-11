@@ -2,17 +2,22 @@
 #include <iostream>
 
 TileSet::TileSet(int tileWidth, int tileHeight, std::string file) {
-    this->tileWidth = tileWidth;
-    this->tileHeight = tileHeight;
 
     GameObject *gameObject = new GameObject();
-    this->tileSet = new Sprite(*gameObject, "assets/img/tileset.png"); 
+    this->tileSet = new Sprite(*gameObject, file); 
     gameObject->AddComponent(this->tileSet);
 
     if(this->tileSet->IsOpen()) {
+        this->tileWidth = tileWidth;
+        this->tileHeight = tileHeight;
+
         this->rows = this->tileSet->GetHeigth() / tileHeight;
         this->colums = this->tileSet->GetWidth() / tileWidth;
     }
+}
+
+TileSet::~TileSet() {
+
 }
 
 void TileSet::RenderTile(unsigned index, float x, float y) {

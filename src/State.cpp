@@ -15,7 +15,6 @@ State::State() {
     this->quitRequested = false;
 	started = false;
 
-	LoadAssets();
 
 	GameObject *gameObjectFundo = new GameObject();
 	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
@@ -31,8 +30,9 @@ State::State() {
 	TileSet *tileset = new TileSet(64, 64, "assets/img/tileset.png");
 	TileMap *tilemap = new TileMap(*gameObjectMap, "assets/map/tileMap.txt", tileset);
 	gameObjectMap->AddComponent(tilemap);
-	gameObjectMap->box.x = 0;
-	gameObjectMap->box.y = 0;
+	//gameObjectMap->box.x = 0;
+	//gameObjectMap->box.y = 0;
+	gameObjectMap->box.SetPosicao(Vec2(0,0));
 	objectArray.emplace_back(gameObjectMap);
 
 	//Criação de Alien no mapa
@@ -45,7 +45,6 @@ State::State() {
 
 	objectArray.emplace_back(gameObjectAliens);
 
-	//Camera::Follow(gameObjectAliens);
 
 	
 	music = new Music("assets/audio/stageState.ogg");
@@ -59,7 +58,7 @@ State::~State() {
 }
 
 void State::Start() {
-	//LoadAssets();
+	LoadAssets();
 
 	for(int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Start();

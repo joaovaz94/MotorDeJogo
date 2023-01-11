@@ -50,8 +50,8 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     if(hp >= 0 ){
 	    InputManager &input = InputManager::GetInstance();
 
-        int mousePosX =  input.GetMouseX() - Camera::pos.x;
-        int mousePosY =  input.GetMouseY() - Camera::pos.y;
+        int mousePosX =  input.GetMouseX() + Camera::pos.x;
+        int mousePosY =  input.GetMouseY() + Camera::pos.y;
         if (input.MousePress(LEFT_MOUSE_BUTTON)) {
             //Botão Esquerdo deve atirar
             //Action acaoAtirar(Action::ActionType::SHOOT, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
@@ -96,7 +96,6 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
                 }
             }
             if(acaoAtual.type == Action::ActionType::SHOOT) {
-                int minonAleatorio = rand() % qtdMinions;
                 int minionMaisProximo = GetMinionProximo(acaoAtual.pos);
                 //std::shared_ptr<GameObject> minionApontado = minionArray[minonAleatorio].lock();
                 std::shared_ptr<GameObject> minionApontado = minionArray[minionMaisProximo].lock();

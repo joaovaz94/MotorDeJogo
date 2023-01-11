@@ -26,10 +26,10 @@ void TileMap::Load(std::string file) {
         //Pegando as informações do cabeçalho do Map
         getline(conteudoArquivo, aux, ',');
         mapWidth = stoi(aux);
-        std::cout << "mapWidth: " << mapWidth;
+        //std::cout << "mapWidth: " << mapWidth;
         getline(conteudoArquivo, aux, ',');
         mapHeight = stoi(aux);
-        std::cout << "mapHeight: " << mapHeight;
+        //std::cout << "mapHeight: " << mapHeight;
         getline(conteudoArquivo, aux, ',');
         mapDepth = stoi(aux);
 
@@ -56,8 +56,8 @@ void TileMap::SetTileSet(TileSet *tileset) {
 
 int& TileMap::At(int x, int y, int z){
     z = (z * mapWidth * mapHeight);
-    y = y * mapWidth;
-    return tileMatrix.at(x + y + z);
+    y = (y * mapWidth);
+    return tileMatrix.at((x + y + z));
 }
 
 void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
@@ -68,7 +68,7 @@ void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
         for(int posX=0; posX < this->GetWidth(); posX++) {
             int index = At(posX, posY, layer);
             int y = (posY * tileHeigth) - cameraY;
-            int x = (posX * tileHeigth) - cameraX;
+            int x = (posX * tileWidth) - cameraX;
             tileset->RenderTile(index, x, y);
         }
     }
@@ -76,7 +76,7 @@ void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
 
 void TileMap::Render() {
     for(int camada=0; camada < this->GetDepth(); camada++) {
-        this->RenderLayer(camada, Camera::pos.x * ((camada * 0,3) +1), Camera::pos.y *((camada * 0.3 )+1) );
+        this->RenderLayer(camada, Camera::pos.x * ((camada * 0.3) +1), Camera::pos.y *((camada * 0.3 )+1) );
     }
 }
 
