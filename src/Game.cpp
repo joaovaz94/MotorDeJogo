@@ -9,7 +9,7 @@ Game *Game::instance = nullptr;
 Game& Game::GetInstance() {
 
     if(Game::instance == nullptr) {
-        Game::instance = new Game("Janela", 640, 480);
+        Game::instance = new Game("Janela", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
         std::cout << "Jogo iniciado em GetInstance\n";
     }
     return *Game::instance;
@@ -103,6 +103,7 @@ SDL_Renderer* Game::GetRenderer() {
 
 void Game::Run() {
     //Fazer loop de jogo
+    state->Start();
     while(!state->QuitRequested()) {
         CalculateDeltaTime();
         //Que faz

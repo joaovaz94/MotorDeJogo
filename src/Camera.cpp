@@ -1,4 +1,5 @@
 #include "include/Camera.h"
+#include "include/Game.h"
 #include "include/Vec2.h"
 #include <iostream>
 
@@ -29,7 +30,7 @@ void Camera::Update(float dt) {
     speed = Vec2();
 
     if(focus != nullptr) {
-        pos = focus->box.Center();
+        pos = focus->box.Center() - Vec2(GAME_SCREEN_WIDTH/2, GAME_SCREEN_HEIGHT /2 );
     }
     else {
         if(input.IsKeyDown(LEFT_ARROW_KEY ) || input.IsKeyDown(A_KEY)) {
@@ -47,6 +48,6 @@ void Camera::Update(float dt) {
 
             speed = speed + Vec2(0, 1);
         }
-        pos = pos + (speed * dt * 5) ;
+        pos = pos + (speed * dt * 200) ;
     }
 }

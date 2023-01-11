@@ -2,7 +2,8 @@
 
 GameObject::GameObject () {
     this->isDead = false;
-    //this->box = Rect(0,0,0,0);//Tetativa de iniciar Rect
+    this->started = false;
+    angleDeg = 0;
 }
 
 GameObject::~GameObject() {
@@ -11,6 +12,14 @@ GameObject::~GameObject() {
     for(int i=cont -1; i >= 0; i--) {
         components.erase(components.begin() + i);
     }
+}
+
+void GameObject::Start() {
+
+    for(int i=0; i < (int)components.size(); i++) {
+        components[i]->Start();
+    }
+    started = true;
 }
 
 void GameObject::Update(float dt){

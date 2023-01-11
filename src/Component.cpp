@@ -1,7 +1,10 @@
 #include "include/Component.h"
 
 Component::Component(GameObject& associated) : associated(associated) {
-    //this->associated = associated;
+}
+
+void Component::Start() {
+
 }
 
 void Component::Update(float dt) {

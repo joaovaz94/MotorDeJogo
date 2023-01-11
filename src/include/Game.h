@@ -13,6 +13,9 @@
 #include <iostream>
 #include <string>
 
+#define GAME_SCREEN_WIDTH 1024
+#define GAME_SCREEN_HEIGHT 600
+
 class Game {
 
     private:

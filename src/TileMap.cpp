@@ -26,10 +26,10 @@ void TileMap::Load(std::string file) {
         //Pegando as informações do cabeçalho do Map
         getline(conteudoArquivo, aux, ',');
         mapWidth = stoi(aux);
-        std::cout << "mapWidth: " << mapWidth;
+        //std::cout << "mapWidth: " << mapWidth;
         getline(conteudoArquivo, aux, ',');
         mapHeight = stoi(aux);
-        std::cout << "mapHeight: " << mapHeight;
+        //std::cout << "mapHeight: " << mapHeight;
         getline(conteudoArquivo, aux, ',');
         mapDepth = stoi(aux);
 
@@ -40,7 +40,6 @@ void TileMap::Load(std::string file) {
             for(int til=0; til < (mapWidth * mapHeight); til++) {
                 std::getline(conteudoArquivo, aux, ',');
                 int tileAgora = stoi(aux) -1;
-                //std::cout << tileAgora << std::endl;
                 tileMatrix.push_back(tileAgora);
             }
 
@@ -57,21 +56,19 @@ void TileMap::SetTileSet(TileSet *tileset) {
 
 int& TileMap::At(int x, int y, int z){
     z = (z * mapWidth * mapHeight);
-    y = y * mapWidth;
-    return tileMatrix.at(x + y + z);
+    y = (y * mapWidth);
+    return tileMatrix.at((x + y + z));
 }
 
 void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
 
     int tileHeigth = tileset->GetTileHeight();
     int tileWidth = tileset->GetTileWidth();
-    //std::cout << "mapheight and mapwidth: " << tileHeigth << " " << tileWidth<<"\n";
     for(int posY = 0; posY < this->GetHeigth(); posY++) {
         for(int posX=0; posX < this->GetWidth(); posX++) {
             int index = At(posX, posY, layer);
-            int y = (posY - cameraY) * tileHeigth;
-            int x = (posX - cameraX) * tileWidth;
-            //std::cout << "index " << index << " x: " << x << " y: " << y << std::endl;
+            int y = (posY * tileHeigth) - cameraY;
+            int x = (posX * tileWidth) - cameraX;
             tileset->RenderTile(index, x, y);
         }
     }
@@ -79,8 +76,7 @@ void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
 
 void TileMap::Render() {
     for(int camada=0; camada < this->GetDepth(); camada++) {
-        //Deixa para implementar camera depois
-        this->RenderLayer(camada, Camera::pos.x * ((camada * 0,3) +1), Camera::pos.y *((camada * 0.3 )+1) );
+        this->RenderLayer(camada, Camera::pos.x * ((camada * 0.3) +1), Camera::pos.y *((camada * 0.3 )+1) );
     }
 }
 

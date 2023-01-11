@@ -1,57 +1,48 @@
 #include "include/Sprite.h"
 #include "include/Game.h"
 #include "include/Resources.h"
+#include "include/Camera.h"
 
 Sprite::Sprite(GameObject &associated): Component(associated) {
-    //this->associated = associated;
     texture = nullptr;
+    scale = Vec2(1,1);
 }
 
 Sprite::Sprite(GameObject& associated, std::string file) : Component(associated) {
 
-    //this->associated = associated;
     texture = nullptr;
+    scale = Vec2(1,1);
     this->Open(file);
 
-    /*
-    SetClip(0, 0, 1024, 600);
-    SetClip(0, 0, width, height);
-    associated.box.x = 0;
-    associated.box.y = 0;
-    associated.box.w = width;
-    associated.box.h = height;
-    */
 
 }
 
 Sprite::~Sprite() {
-    SDL_DestroyTexture(texture);
 }
 
 void Sprite::Open(std::string file) {
     
-
-    //SDL_Renderer* renderer = Game::GetInstance().GetRenderer();
-    //Ver melhor como passar o renderizador de Game
-    /*
-    SDL_Texture* img = IMG_LoadTexture(renderer,file.c_str());
-    if(img == nullptr){
-        std::cout << "Erro: " << SDL_GetError();
-        std::cout << "Erro ao carregar Sprite\n";
-    }
-    */
     texture = Resources::GetImage(file);
-    //std::cout << "Sprite: " << img << std::endl;
-    SDL_QueryTexture(this->texture,nullptr ,nullptr, &this->width, &this->height);
+
+    //if(IsOpen()) {
+    //    SDL_LogError(0, "Nao foi possivel carregar textura: %s", IMG_GetError());
+    //}
+    if (SDL_QueryTexture(
+            this->texture,
+            nullptr ,
+            nullptr, 
+            &this->width, 
+            &this->height
+            ) != 0) 
+    {
+        SDL_LogError(0, "Não foi possivel Requerer textura: %s", IMG_GetError());
+    }
+
 
     this->SetClip(0, 0,this->width,this->height);
-    associated.box.x = 0;
-    associated.box.y = 0;
     associated.box.w = width;
     associated.box.h = height;
 
-    //std::cout << "Clip: x: " << this->clipRect.x  << "y: " << this->clipRect.y;
-    //std::cout << "w: " << this->clipRect.w << "h: " << this->clipRect.h << std::endl;
 }
 
 void Sprite::SetClip(int x, int y, int w, int h) {
@@ -61,33 +52,31 @@ void Sprite::SetClip(int x, int y, int w, int h) {
     this->clipRect.h = h;
 }
 
-
-void Sprite::Render(){
-    SDL_Rect rct;
-    rct.x = associated.box.x; 
-    rct.y = associated.box.y; 
-    rct.w = associated.box.w; 
-    rct.h = associated.box.h; 
-
-    if(SDL_RenderCopy(Game::GetInstance().GetRenderer(),
-        texture, &clipRect, & rct)){
-            SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
-        }
-}
-
 void Sprite::Render(int x, int y, int w, int h) {
     SDL_Rect rct;
     rct.x = x;
     rct.y = y;
-    rct.w = w;
-    rct.h = h;
+    rct.w = w * scale.x;
+    rct.h = h * scale.y;
+    
 
-    if(SDL_RenderCopy(Game::GetInstance().GetRenderer(),
-        texture, &clipRect, & rct)){
+    if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
+        texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
             SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
     }
 
 }
+
+void Sprite::Render(){
+    this->Render(
+        associated.box.x - Camera::pos.x,
+        associated.box.y - Camera::pos.y,
+        associated.box.w,
+        associated.box.h
+    );
+
+}
+
 
 bool Sprite::Is(std::string type){
     if(type == "Sprite") {
@@ -98,9 +87,27 @@ bool Sprite::Is(std::string type){
     }
 }
 
-int Sprite::GetWidth() { return this->width; }
+void Sprite::SetScaleX(float scaleX, float scaleY) {
+    if(scaleX == 0){
+        scaleX = scale.x;
+    }
+    if(scaleY == 0){
+        scaleY = scale.y;
+    }
+    scale = Vec2(scaleX, scaleY);
+}
 
-int Sprite::GetHeigth() { return this->height; }
+Vec2 Sprite::GetScale() {
+    return scale;
+}
+
+void Sprite::Update(float dt) {
+
+}
+
+int Sprite::GetWidth() { return this->width * scale.x; }
+
+int Sprite::GetHeigth() { return this->height * scale.y; }
 
 bool Sprite::IsOpen() {
 
