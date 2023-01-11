@@ -1,6 +1,7 @@
 #include "include/Sprite.h"
 #include "include/Game.h"
 #include "include/Resources.h"
+#include "include/Camera.h"
 
 Sprite::Sprite(GameObject &associated): Component(associated) {
     texture = nullptr;
@@ -51,26 +52,14 @@ void Sprite::SetClip(int x, int y, int w, int h) {
     this->clipRect.h = h;
 }
 
-
-void Sprite::Render(){
-    SDL_Rect rct;
-    rct.x = associated.box.x; 
-    rct.y = associated.box.y; 
-    rct.w = associated.box.w * scale.x; 
-    rct.h = associated.box.h * scale.y; 
-
-    if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
-        texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
-            SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
-        }
-}
-
 void Sprite::Render(int x, int y, int w, int h) {
     SDL_Rect rct;
     rct.x = x;
     rct.y = y;
     rct.w = w * scale.x;
     rct.h = h * scale.y;
+    
+    std::cout << "Camera pos: x " << Camera::pos.x << " y " << Camera::pos.y << std::endl;
 
     if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
         texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
@@ -78,6 +67,29 @@ void Sprite::Render(int x, int y, int w, int h) {
     }
 
 }
+
+void Sprite::Render(){
+    //SDL_Rect rct;
+    //rct.x = associated.box.x - Camera::pos.x; 
+    //rct.y = associated.box.y - Camera::pos.y;
+    //rct.w = associated.box.w * scale.x; 
+    //rct.h = associated.box.h * scale.y; 
+
+    //if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
+    //    texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
+    //        SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
+    //    }
+    this->Render(
+        associated.box.x - Camera::pos.x,
+        associated.box.y - Camera::pos.y,
+        //associated.box.x,
+        //associated.box.y,
+        associated.box.w,
+        associated.box.h
+    );
+
+}
+
 
 bool Sprite::Is(std::string type){
     if(type == "Sprite") {

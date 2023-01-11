@@ -8,8 +8,9 @@ CameraFollower::~CameraFollower() {
 }
 
 void CameraFollower::Update(float dt) {
-    associated.box.x = Camera::pos.x;
-    associated.box.y = Camera::pos.y;
+    //associated.box.x = Camera::pos.x;
+    //associated.box.y = Camera::pos.y;
+    associated.box.SetPosicao(Camera::pos);
 }
 
 void CameraFollower::Render() {

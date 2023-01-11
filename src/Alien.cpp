@@ -49,23 +49,30 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
 
     if(hp >= 0 ){
 	    InputManager &input = InputManager::GetInstance();
-        //Conferir se houve input para  o Alien
+
+        int mousePosX =  input.GetMouseX() - Camera::pos.x;
+        int mousePosY =  input.GetMouseY() - Camera::pos.y;
         if (input.MousePress(LEFT_MOUSE_BUTTON)) {
             //Botão Esquerdo deve atirar
-            Action acaoAtirar(Action::ActionType::SHOOT, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
+            //Action acaoAtirar(Action::ActionType::SHOOT, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
+            Action acaoAtirar(Action::ActionType::SHOOT, mousePosX, mousePosY);
             taskQueue.push(acaoAtirar);
 
         }
         if (input.MousePress(RIGHT_MOUSE_BUTTON)) {
             //Botão Direito deve movimentar alien para posição
-            Action acaoMover(Action::ActionType::MOVE, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
+            //Action acaoMover(Action::ActionType::MOVE, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
+            Action acaoMover(Action::ActionType::MOVE, mousePosX, mousePosY);
             taskQueue.push(acaoMover);
         }
         
         //Reseta a speed
         speed = Vec2();
 
+        //std::cout << "Posicao Alien: " << associated.box.Center().toStr() << std::endl;
+
         associated.angleDeg += M_PI * dt * 6;
+        //associated.box.SetPosicao(associated.box.Posicao() + Camera::pos);
         //Checar se há alguma ação na fila
         if(taskQueue.size() > 0) {
             Action acaoAtual = taskQueue.front();

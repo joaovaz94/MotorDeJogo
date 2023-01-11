@@ -67,8 +67,8 @@ void TileMap::RenderLayer( int layer, int cameraX, int cameraY) {
     for(int posY = 0; posY < this->GetHeigth(); posY++) {
         for(int posX=0; posX < this->GetWidth(); posX++) {
             int index = At(posX, posY, layer);
-            int y = (posY - cameraY) * tileHeigth;
-            int x = (posX - cameraX) * tileWidth;
+            int y = (posY * tileHeigth) - cameraY;
+            int x = (posX * tileHeigth) - cameraX;
             tileset->RenderTile(index, x, y);
         }
     }

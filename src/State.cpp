@@ -14,6 +14,9 @@ const double PI = M_PI;
 State::State() {
     this->quitRequested = false;
 	started = false;
+
+	LoadAssets();
+
 	GameObject *gameObjectFundo = new GameObject();
 	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
 	CameraFollower *cameraFollower =  new CameraFollower(*gameObjectFundo);
@@ -34,13 +37,15 @@ State::State() {
 
 	//Criação de Alien no mapa
 	GameObject *gameObjectAliens = new GameObject();
-	int qtdMinions = 4;
+	int qtdMinions = 3;
 	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
 	gameObjectAliens->AddComponent(alien);
 	//gameObjectAliens->box.SetPosicaoCentro(700,500);
 	gameObjectAliens->box.SetPosicao((Vec2(512, 300) - gameObjectAliens->box.Medidas())/2);
 
 	objectArray.emplace_back(gameObjectAliens);
+
+	//Camera::Follow(gameObjectAliens);
 
 	
 	music = new Music("assets/audio/stageState.ogg");
@@ -54,7 +59,7 @@ State::~State() {
 }
 
 void State::Start() {
-	LoadAssets();
+	//LoadAssets();
 
 	for(int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Start();
@@ -74,30 +79,14 @@ void State::Update(float dt){
 		quitRequested = true;
 	}
 
-	//Se apertar espaço cria face de pinguin
-	//Tirando Faces de pinguins pois não devem ser criadas
-	/*
-	if(input.IsKeyDown(SPACE_BAR_KEY)) {
-				Vec2 objPos = Vec2( 200, 0 ).GetRotated( -PI + PI*(rand() % 1001)/500.0 ) + Vec2( input.GetMouseX(), input.GetMouseY() );
-				AddObject((int)objPos.x + Camera::pos.x, (int)objPos.y + Camera::pos.x);
-	}
-	*/
 
 	for (int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Update(dt);
+		//objectArray[i]->Update(dt);
 	}
 
 	for (int i=0; i < (int)objectArray.size(); i++) {
-		//Tratamento pra quando a face morrer
 		if(objectArray[i].get()->IsDead()) {
-			//objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Sprite"));
-			//objectArray[i].get()->RemoveComponent(objectArray[i].get()->GetComponent("Face"));
-			//Sound *soundToErase = (Sound *)objectArray[i].get()->GetComponent("Sound");
-			////soundToErase->Play(1);
-			//if((!soundToErase->IsOpen()) || (soundToErase == nullptr)) {
-			//	objectArray[i].get()->RemoveComponent(soundToErase);
-			//	objectArray.erase(objectArray.begin() + i);
-			//}
 			objectArray.erase(objectArray.begin() + i);
 		}
 	}
@@ -106,7 +95,6 @@ void State::Update(float dt){
 void State::Render() {
     //Trata da Parte 4 de Game::Run
 
-    //Não entendi muito bem
     for(int i = 0; i < (int)objectArray.size(); i++){
         objectArray[i].get()->Render();
     }
@@ -129,26 +117,6 @@ std::weak_ptr< GameObject > State::AddObject(GameObject *go) {
 	std::weak_ptr < GameObject > ptrRetorno(ponteirpCompartilhado);
 	return ptrRetorno;
 
-	/*
-    GameObject *inimigo = new GameObject();
-    Sprite *pinguin = new Sprite(*inimigo, "./assets/img/penguinface.png");
-	inimigo->AddComponent(pinguin);
-    
-	//Adicionando a posicao de um GameObject
-    inimigo->box.w = pinguin->GetWidth();
-    inimigo->box.h = pinguin->GetHeigth();
-    inimigo->box.x = mouseX + Camera::pos.x - (inimigo->box.w /2);
-    inimigo->box.y = mouseY + Camera::pos.y - (inimigo->box.h /2);
-
-    Sound *som_pinguin = new Sound(*inimigo, "./assets/audio/boom.wav" );
-	inimigo->AddComponent(som_pinguin);
-
-    Face *face_pinguin = new Face(*inimigo);
-	inimigo->AddComponent(face_pinguin);
-
-    //colocar este objeto de penguin no vetor de objetos
-    objectArray.emplace_back(inimigo);
-	*/
 }
 
 std::weak_ptr< GameObject > State::GetObjectPtr(GameObject *go) {
