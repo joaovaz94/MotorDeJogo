@@ -15,6 +15,10 @@ class Sprite : public Component {
         int height;
         SDL_Rect clipRect;
         Vec2 scale;
+        int frameCount;
+        int currentFrame;
+        float timeElapsed;
+        float frameTime;
 
     public:
         Sprite(GameObject& associated);
