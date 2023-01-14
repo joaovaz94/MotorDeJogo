@@ -6,15 +6,26 @@
 Sprite::Sprite(GameObject &associated): Component(associated) {
     texture = nullptr;
     scale = Vec2(1,1);
+
+    frameCount = 1;
+    frameTime = 1;
+
+    currentFrame = 0;
+    timeElapsed = 0;
 }
 
-Sprite::Sprite(GameObject& associated, std::string file) : Component(associated) {
+Sprite::Sprite(GameObject& associated, std::string file, int frameCount, float frameTime) : Component(associated) {
 
     texture = nullptr;
     scale = Vec2(1,1);
+
+    this->frameCount = frameCount;
+    this->frameTime = frameTime;
+
+    currentFrame = 0;
+    timeElapsed = 0;
+
     this->Open(file);
-
-
 }
 
 Sprite::~Sprite() {
@@ -24,23 +35,23 @@ void Sprite::Open(std::string file) {
     
     texture = Resources::GetImage(file);
 
-    //if(IsOpen()) {
-    //    SDL_LogError(0, "Nao foi possivel carregar textura: %s", IMG_GetError());
-    //}
+    if(!IsOpen()) {
+        SDL_LogError(0, "Nao foi possivel carregar textura: %s", IMG_GetError());
+    }
     if (SDL_QueryTexture(
-            this->texture,
+            texture,
             nullptr ,
             nullptr, 
-            &this->width, 
-            &this->height
+            &width, 
+            &height
             ) != 0) 
     {
         SDL_LogError(0, "Não foi possivel Requerer textura: %s", IMG_GetError());
     }
 
 
-    this->SetClip(0, 0,this->width,this->height);
-    associated.box.w = width;
+    SetClip(0, 0, width / frameCount, height);
+    associated.box.w = width / frameCount;
     associated.box.h = height;
 
 }
@@ -103,9 +114,45 @@ Vec2 Sprite::GetScale() {
 
 void Sprite::Update(float dt) {
 
+    timeElapsed += dt;
+
+    if(timeElapsed > frameTime) {
+        if(currentFrame > frameCount) {
+            SetFrame(0);
+        }
+        else {
+            SetFrame(currentFrame + 1);
+        }
+    }
 }
 
-int Sprite::GetWidth() { return this->width * scale.x; }
+void Sprite::SetFrame(int frame) {
+    currentFrame = frame;
+    timeElapsed = 0;
+
+    int novoClipX = width * currentFrame / frameCount;
+    int novoClipY = 0;
+    int novoClipW = width / frameCount;
+    int novoClipH = height;
+
+    SetClip(novoClipX, novoClipY, novoClipW, novoClipH);
+
+}
+
+void Sprite::SetFrameCount(int frameCount) {
+    this->frameCount = frameCount;
+    currentFrame = 0;
+
+    SetFrame(0);
+    associated.box.w = GetWidth();
+}
+
+void Sprite::SetFrameTime(float frameTime) {
+    this->frameTime = frameTime;
+    timeElapsed = 0;
+}
+
+int Sprite::GetWidth() { return this->width * scale.x / frameCount; }
 
 int Sprite::GetHeigth() { return this->height * scale.y; }
 

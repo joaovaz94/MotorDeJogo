@@ -5,7 +5,7 @@
 
 Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite) : Component(associated){
 
-    Sprite *spriteBullet = new Sprite(associated, sprite);
+    Sprite *spriteBullet = new Sprite(associated, sprite, 3, 1);
     associated.AddComponent(spriteBullet);
     //std::cout << "Angulo Passado: " << angle << std::endl;
     this->speed = Vec2(1,0).GetRotated(angle) * speed;

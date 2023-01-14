@@ -22,7 +22,7 @@ class Sprite : public Component {
 
     public:
         Sprite(GameObject& associated);
-        Sprite(GameObject& associated, std::string file);
+        Sprite(GameObject& associated, std::string file, int frameCount=1, float frameTime = 1);
         ~Sprite();
 
         void Open(std::string file);
@@ -35,12 +35,14 @@ class Sprite : public Component {
         void SetScaleX(float scaleX, float scaleY);
         Vec2 GetScale();
 
+        void SetFrame(int frame);
+        void SetFrameCount(int frameCount);
+        void SetFrameTime(float frameTime);
+
         int GetWidth();
         int GetHeigth();
         bool IsOpen();
 
-    protected:
-        //GameObject& associated;
 };
 
 #endif //SPRITE_H_INCLUDED
