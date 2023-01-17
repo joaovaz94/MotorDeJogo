@@ -47,7 +47,7 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
  void Alien::Update(float dt) {
 
 
-    if(hp >= 0 ){
+    if(hp > 0 ){
 	    InputManager &input = InputManager::GetInstance();
 
         int mousePosX =  input.GetMouseX() + Camera::pos.x;

@@ -53,6 +53,10 @@ float Vec2::AnguloParaAlvo(Vec2 &vetor) {
     return -atan2(aux.y, aux.x);
 }
 
+float Vec2::atan() {
+    return atan2(y,x);
+}
+
 Vec2 Vec2::operator+(Vec2 const &vetor) {
     Vec2 aux = Vec2(0,0);
     aux.x = this->x + vetor.x;

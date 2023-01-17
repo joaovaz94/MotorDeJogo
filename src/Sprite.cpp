@@ -116,14 +116,15 @@ void Sprite::Update(float dt) {
 
     timeElapsed += dt;
 
-    if(timeElapsed > frameTime) {
-        if(currentFrame > frameCount) {
-            SetFrame(0);
-        }
-        else {
+    if(timeElapsed >= frameTime) {
+        if(currentFrame < frameCount) {
             SetFrame(currentFrame + 1);
         }
+        else {
+            SetFrame(0);
+        }
     }
+    currentFrame += 1;
 }
 
 void Sprite::SetFrame(int frame) {

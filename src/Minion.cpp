@@ -32,17 +32,12 @@ void Minion::Update(float dt) {
     Vec2 centroMinion = associated.box.Medidas() /2;
     Vec2 posMinion = associated.box.Center();
     Vec2 centroAlien = alienCenter.lock()->box.Center();
-    //std::cout << "Centro do minion: " << centroAlien.toStr() << std::endl;
     //Calculo da posição inicial do minion nesse update
     Vec2 posInicial = centroAlien - centroMinion + offsetPadrao.GetRotated(arc);
 
     arc += velocidadeAngular;
     associated.box.SetPosicao(posInicial);
-    //associated.angleDeg = -(centroMinion.AnguloParaAlvo(centroAlien) * 180) / (M_PI);
     associated.angleDeg = -(posMinion.AnguloParaAlvo(centroAlien) * 180) / (M_PI);
-    //associated.angleDeg = -centroMinion.AnguloParaAlvo(centroAlien);
-    //associated.angleDeg -= M_PI * dt * 180;
-    //associated.angleDeg = -arc *  200;
 }
 
 void Minion::Render() {

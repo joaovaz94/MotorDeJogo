@@ -8,6 +8,7 @@
 #include "include/Camera.h"
 #include "include/CameraFollower.h"
 #include "include/Alien.h"
+#include "include/PenguinBody.h"
 const double PI = M_PI;
 
 
@@ -43,8 +44,18 @@ State::State() {
 	//gameObjectAliens->box.SetPosicaoCentro(700,500);
 	gameObjectAliens->box.SetPosicao((Vec2(512, 300) - gameObjectAliens->box.Medidas())/2);
 
-	objectArray.emplace_back(gameObjectAliens);
+	AddObject(gameObjectAliens);
 
+	//Criação de Penguin no Jogo
+	GameObject *gameObjectPenguin = new GameObject();
+	PenguinBody *penguinBody = new PenguinBody(*gameObjectPenguin);
+	gameObjectPenguin->AddComponent(penguinBody);
+	gameObjectPenguin->box.SetPosicaoCentro(Vec2(704,640));
+
+	//objectArray.emplace_back(gameObjectPenguin);
+	AddObject(gameObjectPenguin);
+
+	Camera::Follow(gameObjectPenguin);
 
 	
 	music = new Music("assets/audio/stageState.ogg");
