@@ -44,12 +44,12 @@ void PenguinBody::Update(float dt) {
         linearSpeed = 1 / (M_PI * 16);    
 
         if(input.IsKeyDown(W_KEY)) {
-            if(speed.x <= 10) {
+            if(speed.x <= 300) {
                 speed = speed + Vec2(1, 0);
             }
         }
         if(input.IsKeyDown(S_KEY)) {
-            if(speed.x >= -10) {
+            if(speed.x >= -300) {
                 speed = speed + Vec2(-1, 0);
             }
         }

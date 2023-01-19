@@ -59,7 +59,7 @@ State::State() {
 
 	
 	music = new Music("assets/audio/stageState.ogg");
-    music->Play(-1);
+    //music->Play(-1);
 
 	started = true;
 }

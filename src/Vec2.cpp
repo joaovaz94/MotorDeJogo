@@ -57,6 +57,13 @@ float Vec2::atan() {
     return atan2(y,x);
 }
 
+Vec2 Vec2::RotateAroundVec(Vec2 &vetor, float rad) {
+    Vec2 aux = Vec2();
+    aux.x = ((this->x -vetor.x) * cos(rad)) - ((vetor.y - this->y) * sin(rad)) + vetor.x;
+    aux.y = vetor.y -((vetor.y - this->y) * cos(rad)) + ((this->x - vetor.x) * sin(rad));
+    return aux;
+}
+
 Vec2 Vec2::operator+(Vec2 const &vetor) {
     Vec2 aux = Vec2(0,0);
     aux.x = this->x + vetor.x;

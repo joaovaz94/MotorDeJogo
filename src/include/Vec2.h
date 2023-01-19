@@ -23,6 +23,7 @@ public:
     float DistanciaDoVetor(Vec2 &vetor);
     float AnguloParaAlvo(Vec2 &vetor);
     float atan();
+    Vec2 RotateAroundVec(Vec2 &vetor, float rad);
 
     Vec2 operator+(Vec2 const &vetor);
     Vec2 operator-(Vec2 const &vetor);
