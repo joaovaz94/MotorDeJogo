@@ -11,7 +11,7 @@ PenguinBody::PenguinBody(GameObject &associated) : Component(associated)  {
     Sprite *spritePenguin = new Sprite(associated, "assets/img/penguin.png");
     associated.AddComponent(spritePenguin);
 
-    speed = Vec2();
+    speed = Vec2(1,0);
     linearSpeed = 0;
     angle = 0;
     hp = 10;
@@ -41,27 +41,45 @@ void PenguinBody::Update(float dt) {
     else{
     //std::cout << "PenguinBody update" << std::endl;
 	    InputManager &input = InputManager::GetInstance();
-        linearSpeed = 1 / (M_PI * 16);    
+        Vec2 penguinCenter = associated.box.Center();
+        Vec2 rotacao = associated.box.Medidas() /2 +associated.box.Center();
+        float velocidadeAngular = 1 / (M_PI * 16);    
 
         if(input.IsKeyDown(W_KEY)) {
+            //if(linearSpeed <= 300) {
             if(speed.x <= 300) {
-                speed = speed + Vec2(1, 0);
+                //linearSpeed++;
+                speed += Vec2(1, 0);
             }
         }
         if(input.IsKeyDown(S_KEY)) {
+            //if(linearSpeed >= -300) {
             if(speed.x >= -300) {
-                speed = speed + Vec2(-1, 0);
+                //linearSpeed--;
+                speed -= Vec2(1, 0);
             }
         }
         if(input.IsKeyDown(A_KEY)) {
-            speed = speed + speed.GetRotated(M_PI / 90);
+            //speed = speed + speed.GetRotated(M_PI / 90);
+            //speed = speed.RotateAroundVec(penguinCenter, -M_PI / 90);
+            //rotacao = rotacao + rotacao.RotateAroundVec(penguinCenter, velocidadeAngular);
+            //rotacao = rotacao + rotacao.RotateAroundVec(penguinCenter ,velocidadeAngular);
+            speed += speed.GetRotated(M_PI / 90);
         }
         if(input.IsKeyDown(D_KEY)) {
-            speed = speed + speed.GetRotated(-M_PI / 90);
+            //speed = speed + speed.GetRotated(-M_PI / 90);
+            //speed = speed.RotateAroundVec(penguinCenter, M_PI / 90);
+            //rotacao = rotacao + rotacao.RotateAroundVec(penguinCenter ,-velocidadeAngular);
             //associated.angleDeg -= linearSpeed;
+            speed += speed.GetRotated(-M_PI / 90);
         }
+        std::cout << "Pos penguin antes: " << associated.box.Posicao().toStr() << std::endl;
         associated.box += speed * dt;
         associated.angleDeg = speed.atan() * 90 / M_PI;
+        //associated.angleDeg = penguinCenter.AnguloParaAlvo(rotacao);
+        std::cout << "Pos penguin: " << associated.box.Posicao().toStr() << std::endl;
+        std::cout << "Speed penguin: " << speed.toStr() << std::endl;
+        std::cout << "LinearSpeed penguin: " << linearSpeed << std::endl;
     }
 }
 

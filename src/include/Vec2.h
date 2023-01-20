@@ -26,7 +26,9 @@ public:
     Vec2 RotateAroundVec(Vec2 &vetor, float rad);
 
     Vec2 operator+(Vec2 const &vetor);
+    Vec2 operator+=(Vec2 const &vetor); 
     Vec2 operator-(Vec2 const &vetor);
+    Vec2 operator-=(Vec2 const &vetor); 
     Vec2 operator*(float num);
     Vec2 operator/(float num);
 };

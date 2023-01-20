@@ -56,27 +56,16 @@ bool PenguinCannon::Is(std::string type) {
 void PenguinCannon::Shoot() {
 
     float angulo = angle * M_PI / 180;
-    //Vec2 saidaBullet = associated.box.Center().GetRotated(angle * M_PI / 180) + (associated.box.Medidas()/2) ;
-    //Vec2 saidaBullet = associated.box.Center().GetRotated(associated.angleDeg * M_PI / 180) + (associated.box.Medidas()/2) ;
-    //Vec2 rotacao =Vec2(1,1).GetRotated(angulo) * -M_PI / 180;
-    //Vec2 saidaBullet1 = associated.box.Center() + (associated.box.Medidas() / 2);
-    //Vec2 saidaBullet = saidaBullet1.GetRotated(angulo);
     Vec2 penguinCenter = associated.box.Center();
     Vec2 saidaBullet = penguinCenter+ Vec2(associated.box.w /2, associated.box.h /2);
     saidaBullet = saidaBullet.RotateAroundVec(penguinCenter, angulo);
-    //Vec2 saidaBullet = saidaBullet1 - associated.box.Center().GetRotated(angulo);
-    //Vec2 rotacao = saidaBullet1 - saidaBullet;
-    //Vec2 saidaBullet = Vec2().GetRotated(Vec2(associated.box.x + associated.box.w, associated.box.y + associated.box.h / 2) - associated.box.Center(), associated.angleDeg * PI / 180);
-    std::cout << "Saida de bullet: " << saidaBullet.toStr() << std::endl;
-    std::cout << "Angulo de bullet: " << angulo << std::endl;
-    //std::cout << "Rotacao de bullet: " << rotacao.toStr() << std::endl;
     GameObject *objetoBullet = new GameObject();
 
     objetoBullet->box.SetPosicaoCentro(saidaBullet);
     //objetoBullet->box.SetPosicao(saidaBullet);
     //objetoBullet->angleDeg = -180 * angle / M_PI;
     objetoBullet->angleDeg = angle;
-    Bullet *bullet = new Bullet(*objetoBullet, -angulo, 300, 10, 800,"assets/img/penguinbullet.png");
+    Bullet *bullet = new Bullet(*objetoBullet, -angulo, 300, 10, 800,"assets/img/penguinbullet.png", 4, 0.2);
     objetoBullet->AddComponent(bullet);
 
     State *state = &Game::GetInstance().GetState();

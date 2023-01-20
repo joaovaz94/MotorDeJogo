@@ -3,9 +3,9 @@
 #include <iostream>
 
 
-Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite) : Component(associated){
+Bullet::Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite, int frameCount, float frameTime) : Component(associated){
 
-    Sprite *spriteBullet = new Sprite(associated, sprite, 3, 1);
+    Sprite *spriteBullet = new Sprite(associated, sprite, frameCount, frameTime);
     associated.AddComponent(spriteBullet);
     //std::cout << "Angulo Passado: " << angle << std::endl;
     this->speed = Vec2(1,0).GetRotated(angle) * speed;
