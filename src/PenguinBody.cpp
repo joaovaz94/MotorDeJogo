@@ -3,6 +3,7 @@
 #include "include/State.h"
 #include "include/Game.h"
 #include "include/Sprite.h"
+#include "include/Collider.h"
 
 PenguinBody *PenguinBody::player;
 
@@ -10,13 +11,14 @@ PenguinBody::PenguinBody(GameObject &associated) : Component(associated)  {
 
     Sprite *spritePenguin = new Sprite(associated, "assets/img/penguin.png");
     associated.AddComponent(spritePenguin);
+    Collider *colisor = new Collider(associated);
+    associated.AddComponent(colisor);
 
     speed = Vec2(1,0);
     linearSpeed = 0;
     angle = 0;
     hp = 10;
     player = this;
-    //std::cout << "PenguinBody instanciado" << std::endl;
 }
 
 PenguinBody::~PenguinBody() {
@@ -42,6 +44,7 @@ void PenguinBody::Update(float dt) {
     //std::cout << "PenguinBody update" << std::endl;
 	    InputManager &input = InputManager::GetInstance();
         //Vec2 penguinCenter = associated.box.Center();
+        Vec2 penguinBegin = associated.box.Center() - Vec2(associated.box.h / 2,0);
         //Vec2 rotacao = associated.box.Medidas() /2 +associated.box.Center();
         Vec2 vZero = Vec2(0,0);
         //float velocidadeAngular = 1 / (M_PI * 16);    
@@ -66,8 +69,10 @@ void PenguinBody::Update(float dt) {
             //speed = speed.RotateAroundVec(penguinCenter, -M_PI / 90);
             //rotacao = rotacao + rotacao.RotateAroundVec(penguinCenter, velocidadeAngular);
             //rotacao = rotacao + rotacao.RotateAroundVec(penguinCenter ,velocidadeAngular);
+            //speed = speed.GetRotated(M_PI / 90);
+            //speed = speed +speed.RotateAroundVec(penguinBegin, M_PI / 180 );
             speed = speed.GetRotated(M_PI / 90);
-            angle += M_PI /90;
+            //angle += M_PI /90;
             //speed =  speed.RotateAroundVec(vZero, M_PI/45);
             //speed = speed.RotateAroundVec(speed, -angle);
             //speed =  speed.RotateAroundVec(penguinCenter, -M_PI / 90);
@@ -77,8 +82,9 @@ void PenguinBody::Update(float dt) {
             //speed = speed.RotateAroundVec(penguinCenter, M_PI / 90);
             //rotacao = rotacao + rotacao.RotateAroundVec(penguinCenter ,-velocidadeAngular);
             //associated.angleDeg -= linearSpeed;
+            //speed = speed + speed.RotateAroundVec(penguinBegin , -M_PI / 180);
             speed = speed.GetRotated(-M_PI / 90);
-            angle -= M_PI /90;
+            //angle -= M_PI /90;
             //speed = speed.RotateAroundVec(vZero, -M_PI/45);
             //speed = speed.RotateAroundVec(speed, -angle);
             //speed =  speed.RotateAroundVec(penguinCenter, +M_PI / 90);

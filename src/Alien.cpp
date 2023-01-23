@@ -8,6 +8,7 @@
 #include <iostream>
 #include <math.h>
 #include "include/Minion.h"
+#include "include/Collider.h"
 
 
  Alien::Action::Action(ActionType type, float x, float y) {
@@ -19,6 +20,9 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     
     Sprite *spriteAlien = new Sprite(associated, "assets/img/alien.png");
     associated.AddComponent(spriteAlien);
+
+    Collider *colisor = new Collider(associated);
+    associated.AddComponent(colisor);
 
     speed = Vec2();
     hp = 10;

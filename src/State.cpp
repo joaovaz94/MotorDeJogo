@@ -9,6 +9,7 @@
 #include "include/CameraFollower.h"
 #include "include/Alien.h"
 #include "include/PenguinBody.h"
+#include "Colision.cpp"
 const double PI = M_PI;
 
 
@@ -93,6 +94,21 @@ void State::Update(float dt){
 	for (int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Update(dt);
 		//objectArray[i]->Update(dt);
+	}
+
+	std::vector<std::weak_ptr< GameObject >> temCollider;
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		if(objectArray[i].get()->GetComponent("Collider") != nullptr) {
+			temCollider.push_back(objectArray[i]);
+		}
+	}
+	for (int i=0; i < (int)temCollider.size(); i++) {
+		for(int j = i +1; j < temCollider.size();j++){
+			if(Collision::IsColliding(temCollider[i].lock()->box, temCollider[j].lock()->box, temCollider[i].lock()->angleDeg * M_PI / 180, temCollider[j].lock()->angleDeg * M_PI / 180)){
+				GameObject *objeto1 = temCollider[i].lock().get();
+				GameObject *objeto2 = temCollider[j].lock().get();
+			}
+		}
 	}
 
 	for (int i=0; i < (int)objectArray.size(); i++) {

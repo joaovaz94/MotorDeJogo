@@ -5,11 +5,15 @@
 #include "include/State.h"
 #include "include/Game.h"
 #include "include/InputManager.h"
+#include "include/Collider.h"
 
 PenguinCannon::PenguinCannon(GameObject &associated, std::weak_ptr< GameObject > penguinBody) : Component(associated)  {
 
     Sprite *spritePenguin = new Sprite(associated, "assets/img/cubngun.png");
     associated.AddComponent(spritePenguin);
+
+    Collider *colisor = new Collider(associated);
+    associated.AddComponent(colisor);
 
     angle = 0;
     pbody = penguinBody;

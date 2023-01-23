@@ -23,6 +23,7 @@ class Component
         void virtual Update(float dt) = 0;
         void virtual Render() = 0;
         bool virtual Is(std::string type) = 0;
+        void virtual NotifyCollision(GameObject &other);
         
         std::string type;
     

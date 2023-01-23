@@ -5,6 +5,7 @@
 #include "include/Game.h"
 #include <math.h>
 #include <iostream>
+#include "include/Collider.h"
 
 Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, float arcOffsetDeg) : Component(associated){
     Sprite *spriteMinion = new Sprite(associated, "assets/img/minion.png");
@@ -19,6 +20,9 @@ Minion::Minion(GameObject& associated, std::weak_ptr<GameObject> alienCenter, fl
     associated.box.SetPosicao(alienObjeto->box.Center() + (associated.box.Medidas() /2));
     associated.angleDeg = arc;
     associated.AddComponent(spriteMinion);
+    
+    Collider *colisor = new Collider(associated);
+    associated.AddComponent(colisor);
 }
 
 Minion::~Minion() {
