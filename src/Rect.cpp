@@ -74,8 +74,8 @@ void Rect::SetPosicaoCentro(Vec2 novaPos) {
 
 Rect Rect::operator+(Vec2 const &vetor) {
 
-    float xAux = vetor.x;
-    float yAux = vetor.y;
+    float xAux = this->x + vetor.x;
+    float yAux = this->y + vetor.y;
 
     Rect aux = Rect(xAux, yAux, this->w, this->h);
 
