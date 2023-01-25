@@ -39,6 +39,7 @@ class Alien : public Component{
         void Render();
         bool Is(std::string type);
         int GetMinionProximo(Vec2 posTiro);
+        void NotifyCollision(GameObject &other);
 };
 
 

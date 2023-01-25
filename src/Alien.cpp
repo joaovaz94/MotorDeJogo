@@ -9,6 +9,7 @@
 #include <math.h>
 #include "include/Minion.h"
 #include "include/Collider.h"
+#include "include/Bullet.h"
 
 
  Alien::Action::Action(ActionType type, float x, float y) {
@@ -141,4 +142,14 @@ int Alien::GetMinionProximo(Vec2 posTiro) {
         }
     }
     return maisProximo;
+}
+
+void Alien::NotifyCollision(GameObject &other) {
+    std::cout << "Colisao com o Alien" << std::endl;
+    if(other.GetComponent("Bullet")->Is("Bullet")) {
+        Bullet *bullet = (Bullet *)other.GetComponent("Bullet");
+        if(bullet != nullptr) {
+            this->hp = this->hp - bullet->GetDamage();
+        }
+    }
 }

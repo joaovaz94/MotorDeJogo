@@ -19,6 +19,7 @@ public:
     bool Is(std::string type);
 
     void Shoot();
+    void NotifyCollision(GameObject &other);
 };
 
 #endif //PENGUINCANNON_H_INCLUDED

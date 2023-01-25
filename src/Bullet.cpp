@@ -55,3 +55,9 @@ bool Bullet::Is(std::string type) {
 int Bullet::GetDamage() {
     return damage;
 }
+
+void Bullet::NotifyCollision(GameObject &other) {
+    if(other.GetComponent("PenguinBody")->Is("Bullet") || other.GetComponent("Alien")->Is("Bullet")){
+        associated.RequestDelete();
+    }
+}

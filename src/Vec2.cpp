@@ -1,5 +1,4 @@
 #include "include/Vec2.h"
-#include <math.h>
 
 Vec2::Vec2(float x, float y) {
     this->x = x;
@@ -22,7 +21,7 @@ std::string Vec2::toStr() {
 
 Vec2 Vec2::GetRotated(float rad) {
     float posX = ((this->x * cos(rad)) - (this->y * sin(rad)));
-    float posY = ((this->y * cos(rad)) - (this->x * sin(rad)));
+    float posY = ((this->y * cos(rad)) + (this->x * sin(rad)));
 
     return Vec2(posX, posY);
 }

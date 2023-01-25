@@ -107,6 +107,8 @@ void State::Update(float dt){
 			if(Collision::IsColliding(temCollider[i].lock()->box, temCollider[j].lock()->box, temCollider[i].lock()->angleDeg * M_PI / 180, temCollider[j].lock()->angleDeg * M_PI / 180)){
 				GameObject *objeto1 = temCollider[i].lock().get();
 				GameObject *objeto2 = temCollider[j].lock().get();
+				//objeto1->NotifyCollision(*objeto2);
+				//objeto2->NotifyCollision(*objeto1);
 			}
 		}
 	}

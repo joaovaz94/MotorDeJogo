@@ -75,3 +75,7 @@ void PenguinCannon::Shoot() {
     State *state = &Game::GetInstance().GetState();
     state->AddObject(objetoBullet);
 }
+
+void PenguinCannon::NotifyCollision(GameObject &other) {
+
+}

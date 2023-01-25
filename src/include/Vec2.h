@@ -2,6 +2,7 @@
 #define VEC2_H_INCLUDED
 
 #include <string>
+#include <math.h>
 
 class Vec2
 {
@@ -38,7 +39,7 @@ public:
     }
 
 	static inline Vec2 Rotate(const Vec2& p, float angle) {
-			float cs = std::cos(angle), sn = std::sin(angle);
+			float cs = cos(angle), sn = sin(angle);
 			return Vec2 ( p.x * cs - p.y * sn, p.x * sn + p.y * cs );
 	}
 };

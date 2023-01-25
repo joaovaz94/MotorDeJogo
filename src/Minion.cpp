@@ -75,3 +75,7 @@ void Minion::Shoot(Vec2 pos) {
     State *state = &Game::GetInstance().GetState();
     state->AddObject(objetoBullet);
 }
+
+void Minion::NotifyCollision(GameObject &other) {
+
+}
