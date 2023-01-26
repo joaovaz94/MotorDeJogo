@@ -34,7 +34,6 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
  Alien::~Alien() {
     //esvaziar o Array com minions
     minionArray.clear();
-    associated.RequestDelete();
  }
  void Alien::Start() {
     //Popular o Array com minions
@@ -146,13 +145,12 @@ int Alien::GetMinionProximo(Vec2 posTiro) {
 }
 
 void Alien::NotifyCollision(GameObject &other) {
-    std::cout << "Colisao com o Alien" << std::endl;
     if(other.GetComponent("Bullet") != nullptr) {
         Bullet *bullet = (Bullet *)other.GetComponent("Bullet");
         if(bullet != nullptr && !bullet->targetsPlayer) {
             this->hp = this->hp - bullet->GetDamage();
             if(this->hp <= 0) {
-                this->~Alien();
+                associated.RequestDelete();
             }
         }
     }

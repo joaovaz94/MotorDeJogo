@@ -30,6 +30,11 @@ Minion::~Minion() {
 
 void Minion::Update(float dt) {
 
+    if(alienCenter.lock() == nullptr){
+        associated.RequestDelete();
+        return;
+    }
+
     //Velocidade angular
     float velocidadeAngular = 1 / (M_PI * 16);    
     Vec2 offsetPadrao = Vec2(200, 0);
@@ -38,6 +43,7 @@ void Minion::Update(float dt) {
     Vec2 centroAlien = alienCenter.lock()->box.Center();
     //Calculo da posição inicial do minion nesse update
     Vec2 posInicial = centroAlien - centroMinion + offsetPadrao.GetRotated(arc);
+
 
     arc += velocidadeAngular;
     associated.box.SetPosicao(posInicial);

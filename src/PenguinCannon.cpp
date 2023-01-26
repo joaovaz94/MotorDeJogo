@@ -24,7 +24,7 @@ PenguinCannon::~PenguinCannon() {
 }
 
 void PenguinCannon::Update(float dt) {
-    if(pbody.lock()->IsDead()) {
+    if(pbody.lock() == nullptr) {
         associated.RequestDelete();
     }
     else {
@@ -67,7 +67,7 @@ void PenguinCannon::Shoot() {
 
     objetoBullet->box.SetPosicaoCentro(saidaBullet);
     objetoBullet->angleDeg = angle;
-    Bullet *bullet = new Bullet(*objetoBullet, angulo, 300, 10, 800,"assets/img/penguinbullet.png", 4, 0.2, false);
+    Bullet *bullet = new Bullet(*objetoBullet, angulo, 300, 5, 800,"assets/img/penguinbullet.png", 4, 0.2, false);
     objetoBullet->AddComponent(bullet);
 
     State *state = &Game::GetInstance().GetState();
