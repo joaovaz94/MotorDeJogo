@@ -66,10 +66,8 @@ void PenguinCannon::Shoot() {
     GameObject *objetoBullet = new GameObject();
 
     objetoBullet->box.SetPosicaoCentro(saidaBullet);
-    //objetoBullet->box.SetPosicao(saidaBullet);
-    //objetoBullet->angleDeg = -180 * angle / M_PI;
     objetoBullet->angleDeg = angle;
-    Bullet *bullet = new Bullet(*objetoBullet, -angulo, 300, 10, 800,"assets/img/penguinbullet.png", 4, 0.2);
+    Bullet *bullet = new Bullet(*objetoBullet, angulo, 300, 10, 800,"assets/img/penguinbullet.png", 4, 0.2, false);
     objetoBullet->AddComponent(bullet);
 
     State *state = &Game::GetInstance().GetState();

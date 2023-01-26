@@ -5,6 +5,7 @@
 #include "include/Sprite.h"
 #include "include/Collider.h"
 #include "include/Bullet.h"
+#include "include/Camera.h"
 
 PenguinBody *PenguinBody::player;
 
@@ -39,6 +40,7 @@ void PenguinBody::Start() {
 void PenguinBody::Update(float dt) {
     if(hp <= 0) {
         this->associated.RequestDelete();
+        Camera::Unfollow();
     }
     else{
 	    InputManager &input = InputManager::GetInstance();
@@ -82,15 +84,20 @@ bool PenguinBody::Is(std::string type) {
 }
 
 void PenguinBody::NotifyCollision(GameObject &other) {
-    std::cout << "Colisao com o PenguinBody" << std::endl;
-    if (hp > 0)
+    if (other.GetComponent("Bullet") != nullptr)
     {
-        if (other.GetComponent("Bullet")->Is("Bullet"))
+        Bullet *bullet = (Bullet *)other.GetComponent("Bullet");
+        if (bullet->targetsPlayer)
         {
-            Bullet *bullet = (Bullet *)other.GetComponent("Bullet");
-            if (bullet != nullptr)
+            if (hp > 0)
             {
                 this->hp = this->hp - bullet->GetDamage();
+            }
+            else
+            {
+
+                this->associated.RequestDelete();
+                Camera::Unfollow();
             }
         }
     }

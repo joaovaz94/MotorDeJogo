@@ -69,7 +69,7 @@ void Minion::Shoot(Vec2 pos) {
 
     objetoBullet->box.SetPosicaoCentro(saidaBullet);
     objetoBullet->angleDeg = -180 * angulo / M_PI;
-    Bullet *bullet = new Bullet(*objetoBullet, angulo , 300, 10, 800,"assets/img/minionbullet2.png", 3, 0.2);
+    Bullet *bullet = new Bullet(*objetoBullet, -angulo , 300, 10, 800,"assets/img/minionbullet2.png", 3, 0.2, true);
     objetoBullet->AddComponent(bullet);
 
     State *state = &Game::GetInstance().GetState();

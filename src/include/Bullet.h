@@ -13,7 +13,8 @@ private:
     int damage;
     
 public:
-    Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite, int frameCount, float frameTime );
+    Bullet(GameObject& associated, float angle, float speed, int damage, float maxDistance, std::string sprite, int frameCount, float frameTime, bool targetsPlayer );
+    bool targetsPlayer;
 
     void Start();
     void Update(float dt);
