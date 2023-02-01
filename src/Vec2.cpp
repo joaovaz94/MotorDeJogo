@@ -1,5 +1,4 @@
 #include "include/Vec2.h"
-#include <math.h>
 
 Vec2::Vec2(float x, float y) {
     this->x = x;
@@ -22,7 +21,7 @@ std::string Vec2::toStr() {
 
 Vec2 Vec2::GetRotated(float rad) {
     float posX = ((this->x * cos(rad)) - (this->y * sin(rad)));
-    float posY = ((this->y * cos(rad)) - (this->x * sin(rad)));
+    float posY = ((this->y * cos(rad)) + (this->x * sin(rad)));
 
     return Vec2(posX, posY);
 }
@@ -53,6 +52,17 @@ float Vec2::AnguloParaAlvo(Vec2 &vetor) {
     return -atan2(aux.y, aux.x);
 }
 
+float Vec2::atan() {
+    return atan2(y,x);
+}
+
+Vec2 Vec2::RotateAroundVec(Vec2 &vetor, float rad) {
+    Vec2 aux = Vec2();
+    aux.x = ((this->x -vetor.x) * cos(rad)) - ((vetor.y - this->y) * sin(rad)) + vetor.x;
+    aux.y = vetor.y -((vetor.y - this->y) * cos(rad)) + ((this->x - vetor.x) * sin(rad));
+    return aux;
+}
+
 Vec2 Vec2::operator+(Vec2 const &vetor) {
     Vec2 aux = Vec2(0,0);
     aux.x = this->x + vetor.x;
@@ -60,11 +70,19 @@ Vec2 Vec2::operator+(Vec2 const &vetor) {
     return aux;
 }
 
+Vec2 Vec2::operator+=(Vec2 const &vetor) {
+    return *this + vetor;
+}
+
 Vec2 Vec2::operator-(Vec2 const &vetor) {
     Vec2 aux = Vec2(0,0);
     aux.x = this->x - vetor.x;
     aux.y = this->y - vetor.y;
     return aux;
+}
+
+Vec2 Vec2::operator-=(Vec2 const &vetor) {
+    return *this - vetor;
 }
 
 Vec2 Vec2::operator*(float num) {

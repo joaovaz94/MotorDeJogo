@@ -8,6 +8,8 @@
 #include "include/Camera.h"
 #include "include/CameraFollower.h"
 #include "include/Alien.h"
+#include "include/PenguinBody.h"
+#include "Colision.cpp"
 const double PI = M_PI;
 
 
@@ -43,8 +45,18 @@ State::State() {
 	//gameObjectAliens->box.SetPosicaoCentro(700,500);
 	gameObjectAliens->box.SetPosicao((Vec2(512, 300) - gameObjectAliens->box.Medidas())/2);
 
-	objectArray.emplace_back(gameObjectAliens);
+	AddObject(gameObjectAliens);
 
+	//Criação de Penguin no Jogo
+	GameObject *gameObjectPenguin = new GameObject();
+	PenguinBody *penguinBody = new PenguinBody(*gameObjectPenguin);
+	gameObjectPenguin->AddComponent(penguinBody);
+	gameObjectPenguin->box.SetPosicaoCentro(Vec2(704,640));
+
+	//objectArray.emplace_back(gameObjectPenguin);
+	AddObject(gameObjectPenguin);
+
+	Camera::Follow(gameObjectPenguin);
 
 	
 	music = new Music("assets/audio/stageState.ogg");
@@ -82,6 +94,23 @@ void State::Update(float dt){
 	for (int i=0; i < (int)objectArray.size(); i++) {
 		objectArray[i].get()->Update(dt);
 		//objectArray[i]->Update(dt);
+	}
+
+	std::vector<std::weak_ptr< GameObject >> temCollider;
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		if(objectArray[i].get()->GetComponent("Collider") != nullptr) {
+			temCollider.push_back(objectArray[i]);
+		}
+	}
+	for (int i=0; i < (int)temCollider.size(); i++) {
+		for(int j = i +1; j < temCollider.size();j++){
+			if(Collision::IsColliding(temCollider[i].lock()->box, temCollider[j].lock()->box, temCollider[i].lock()->angleDeg * M_PI / 180, temCollider[j].lock()->angleDeg * M_PI / 180)){
+				GameObject *objeto1 = temCollider[i].lock().get();
+				GameObject *objeto2 = temCollider[j].lock().get();
+				objeto1->NotifyCollision(*objeto2);
+				objeto2->NotifyCollision(*objeto1);
+			}
+		}
 	}
 
 	for (int i=0; i < (int)objectArray.size(); i++) {

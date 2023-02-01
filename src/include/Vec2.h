@@ -2,6 +2,7 @@
 #define VEC2_H_INCLUDED
 
 #include <string>
+#include <math.h>
 
 class Vec2
 {
@@ -22,11 +23,25 @@ public:
     Vec2 Normalize();
     float DistanciaDoVetor(Vec2 &vetor);
     float AnguloParaAlvo(Vec2 &vetor);
+    float atan();
+    Vec2 RotateAroundVec(Vec2 &vetor, float rad);
+
 
     Vec2 operator+(Vec2 const &vetor);
+    Vec2 operator+=(Vec2 const &vetor); 
     Vec2 operator-(Vec2 const &vetor);
+    Vec2 operator-=(Vec2 const &vetor); 
     Vec2 operator*(float num);
     Vec2 operator/(float num);
+    
+    static inline float Dot(const Vec2& a, const Vec2& b) {
+			return a.x * b.x + a.y * b.y;
+    }
+
+	static inline Vec2 Rotate(const Vec2& p, float angle) {
+			float cs = cos(angle), sn = sin(angle);
+			return Vec2 ( p.x * cs - p.y * sn, p.x * sn + p.y * cs );
+	}
 };
 
 

@@ -8,27 +8,32 @@
 #include <iostream>
 #include <math.h>
 #include "include/Minion.h"
+#include "include/Collider.h"
+#include "include/Bullet.h"
 
-
- Alien::Action::Action(ActionType type, float x, float y) {
-    this->type = type;
-    pos = Vec2(x,y);
-}
+int Alien::alienCount = 0;
 
 Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     
     Sprite *spriteAlien = new Sprite(associated, "assets/img/alien.png");
     associated.AddComponent(spriteAlien);
 
-    speed = Vec2();
+    Collider *colisor = new Collider(associated);
+    associated.AddComponent(colisor);
+
+    speed = Vec2(1,0);
     hp = 10;
     qtdMinions = nMinions;
 
+    state = RESTING;
+
+    alienCount++;
 
 }
  Alien::~Alien() {
     //esvaziar o Array com minions
     minionArray.clear();
+    alienCount--;
  }
  void Alien::Start() {
     //Popular o Array com minions
@@ -44,71 +49,34 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     }
  }
 
- void Alien::Update(float dt) {
+ void Alien::Update(float dt)
+ {
 
-
-    if(hp >= 0 ){
-	    InputManager &input = InputManager::GetInstance();
-
-        int mousePosX =  input.GetMouseX() + Camera::pos.x;
-        int mousePosY =  input.GetMouseY() + Camera::pos.y;
-        if (input.MousePress(LEFT_MOUSE_BUTTON)) {
-            //Botão Esquerdo deve atirar
-            //Action acaoAtirar(Action::ActionType::SHOOT, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
-            Action acaoAtirar(Action::ActionType::SHOOT, mousePosX, mousePosY);
-            taskQueue.push(acaoAtirar);
-
+    if (state == RESTING)
+    {
+        if (restTimer.Get() >= 10.5)
+        {
+            Vec2 posAtual = associated.box.Posicao();
+            destination = Camera::pos + Vec2(GAME_SCREEN_WIDTH / 2, GAME_SCREEN_HEIGHT / 2);
+            speed = (destination - posAtual).Normalize();
+            state = MOVING;
         }
-        if (input.MousePress(RIGHT_MOUSE_BUTTON)) {
-            //Botão Direito deve movimentar alien para posição
-            //Action acaoMover(Action::ActionType::MOVE, (input.GetMouseX() + Camera::pos.x), (input.GetMouseY() + Camera::pos.y));
-            Action acaoMover(Action::ActionType::MOVE, mousePosX, mousePosY);
-            taskQueue.push(acaoMover);
-        }
-        
-        //Reseta a speed
-        speed = Vec2();
-
-        //std::cout << "Posicao Alien: " << associated.box.Center().toStr() << std::endl;
-
-        associated.angleDeg += M_PI * dt * 6;
-        //associated.box.SetPosicao(associated.box.Posicao() + Camera::pos);
-        //Checar se há alguma ação na fila
-        if(taskQueue.size() > 0) {
-            Action acaoAtual = taskQueue.front();
-
-            if(acaoAtual.type == Action::ActionType::MOVE) {
-                Vec2 destino = acaoAtual.pos - (Vec2(associated.box.w, associated.box.h)/2);
-                Vec2 posAtual = associated.box.Posicao();
-
-                //Calcular se o Alien já chega à posição no próximo frame
-                speed = (destino - posAtual).Normalize();
-
-                //mudando a posição em velocidade constante
-                associated.box.SetPosicao(associated.box.Posicao() + (speed * dt * 300));
-
-
-                //senão tiver muito perto:
-                if((destino - posAtual).GetMagnitude() < 10.0) {
-                    associated.box.x = destino.x; 
-                    associated.box.y = destino.y; 
-                    taskQueue.pop();
-                }
-            }
-            if(acaoAtual.type == Action::ActionType::SHOOT) {
-                int minionMaisProximo = GetMinionProximo(acaoAtual.pos);
-                //std::shared_ptr<GameObject> minionApontado = minionArray[minonAleatorio].lock();
-                std::shared_ptr<GameObject> minionApontado = minionArray[minionMaisProximo].lock();
-                //std::cout << "Minion sorteado: " << minonAleatorio << std::endl;
-                Minion *minionObjeto = (Minion *)minionApontado->GetComponent("Minion");
-                minionObjeto->Shoot(acaoAtual.pos);
-                //std::cout << "Posicao para tiro: " << acaoAtual.pos.toStr() << std::endl;
-                taskQueue.pop();
-            }
-        }
+        restTimer.Update(dt);
     }
-    else {
-        this->associated.RequestDelete();
+    else
+    {
+        associated.box.SetPosicao(associated.box.Posicao() + (speed * dt * 300));
+        if (associated.box.Center().DistanciaDoVetor(destination) < 100)
+        {
+            destination = Camera::pos + Vec2(GAME_SCREEN_WIDTH / 2, GAME_SCREEN_HEIGHT / 2);
+            int minionMaisProximo = GetMinionProximo(destination);
+            std::shared_ptr<GameObject> minionApontado = minionArray[minionMaisProximo].lock();
+            Minion *minionObjeto = (Minion *)minionApontado->GetComponent("Minion");
+            minionObjeto->Shoot(destination);
+            speed = Vec2();
+            restTimer.Restart();
+            state = RESTING;
+        }
     }
  }
 
@@ -137,4 +105,24 @@ int Alien::GetMinionProximo(Vec2 posTiro) {
         }
     }
     return maisProximo;
+}
+
+void Alien::NotifyCollision(GameObject &other) {
+    if(other.GetComponent("Bullet") != nullptr) {
+        Bullet *bullet = (Bullet *)other.GetComponent("Bullet");
+        if(bullet != nullptr && !bullet->targetsPlayer) {
+            this->hp = this->hp - bullet->GetDamage();
+            if(this->hp <= 0) {
+                associated.RequestDelete();
+
+                GameObject *morteDoAlien = new GameObject();
+                morteDoAlien->AddComponent(new Sprite(*morteDoAlien, "assets/img/aliendeath.png", 4 , 0.1 , 0.4 ));
+                Sound *somDeMorte = new Sound(*morteDoAlien, "assets/audio/boom.wav");
+                somDeMorte->Play(1);
+                morteDoAlien->AddComponent(somDeMorte);
+                morteDoAlien->box.SetPosicaoCentro(associated.box.Center());
+                Game::GetInstance().GetState().AddObject(morteDoAlien);
+            }
+        }
+    }
 }

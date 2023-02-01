@@ -34,5 +34,8 @@ joguinho
 *.out
 *.app
 
+# User defined
+GAME
+
 #Arquivos de configuração do vscode
 .vscode/*

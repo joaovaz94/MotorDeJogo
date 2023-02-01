@@ -6,6 +6,7 @@
 #define INCLUDE_SDL_IMAGE
 #include "SDL_include.h"
 #include "Component.h"
+#include "Timer.h"
 
 class Sprite : public Component {
 
@@ -15,10 +16,16 @@ class Sprite : public Component {
         int height;
         SDL_Rect clipRect;
         Vec2 scale;
+        int frameCount;
+        int currentFrame;
+        float timeElapsed;
+        float frameTime;
+        float secondsToSelfDestruct;
+        Timer selfDestructCount; 
 
     public:
         Sprite(GameObject& associated);
-        Sprite(GameObject& associated, std::string file);
+        Sprite(GameObject& associated, std::string file, int frameCount=1, float frameTime = 1, float secondsToSelfDestruct = 0);
         ~Sprite();
 
         void Open(std::string file);
@@ -31,12 +38,14 @@ class Sprite : public Component {
         void SetScaleX(float scaleX, float scaleY);
         Vec2 GetScale();
 
+        void SetFrame(int frame);
+        void SetFrameCount(int frameCount);
+        void SetFrameTime(float frameTime);
+
         int GetWidth();
         int GetHeigth();
         bool IsOpen();
 
-    protected:
-        //GameObject& associated;
 };
 
 #endif //SPRITE_H_INCLUDED
