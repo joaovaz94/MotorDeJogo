@@ -6,28 +6,21 @@
 
 #include "Component.h"
 #include "GameObject.h"
+#include "Timer.h"
 
 class Alien : public Component{
     private:
         
-        class Action {
-            public:
-                enum ActionType {
-                    MOVE,
-                    SHOOT
-                };
-                Vec2 pos;
-                ActionType type;
-
-                Action(ActionType type, float x, float y);
-        };
-
         Vec2 speed;
         int hp;
         int qtdMinions;
 
-        std::queue<Action> taskQueue;
         std::vector <std::weak_ptr<GameObject>> minionArray;
+
+        enum AlienState { MOVING, RESTING};
+        AlienState state;
+        Timer restTimer;
+        Vec2 destination;
 
     public:
 
@@ -40,6 +33,8 @@ class Alien : public Component{
         bool Is(std::string type);
         int GetMinionProximo(Vec2 posTiro);
         void NotifyCollision(GameObject &other);
+
+        static int alienCount;
 };
 
 

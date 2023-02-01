@@ -6,6 +6,7 @@
 #define INCLUDE_SDL_IMAGE
 #include "SDL_include.h"
 #include "Component.h"
+#include "Timer.h"
 
 class Sprite : public Component {
 
@@ -19,10 +20,12 @@ class Sprite : public Component {
         int currentFrame;
         float timeElapsed;
         float frameTime;
+        float secondsToSelfDestruct;
+        Timer selfDestructCount; 
 
     public:
         Sprite(GameObject& associated);
-        Sprite(GameObject& associated, std::string file, int frameCount=1, float frameTime = 1);
+        Sprite(GameObject& associated, std::string file, int frameCount=1, float frameTime = 1, float secondsToSelfDestruct = 0);
         ~Sprite();
 
         void Open(std::string file);

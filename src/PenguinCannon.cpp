@@ -6,6 +6,7 @@
 #include "include/Game.h"
 #include "include/InputManager.h"
 #include "include/Collider.h"
+#include "include/Timer.h"
 
 PenguinCannon::PenguinCannon(GameObject &associated, std::weak_ptr< GameObject > penguinBody) : Component(associated)  {
 
@@ -37,8 +38,12 @@ void PenguinCannon::Update(float dt) {
         angle = - associated.box.Center().AnguloParaAlvo(mouseVec) * 180 / M_PI;
         associated.angleDeg = angle;
 
-        if (input.MousePress(LEFT_MOUSE_BUTTON)) {
-            Shoot();
+        cooldown.Update(dt);
+
+        if (input.MousePress(LEFT_MOUSE_BUTTON) && cooldown.Get() >= 1) {
+
+                Shoot();
+                cooldown.Restart();
         }
     }
 }

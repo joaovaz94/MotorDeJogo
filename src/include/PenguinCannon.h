@@ -3,12 +3,14 @@
 
 #include "Component.h"
 #include "GameObject.h"
+#include "Timer.h"
 
 class PenguinCannon : public Component
 {
 private:
     std::weak_ptr< GameObject > pbody;
     float angle;
+    Timer cooldown;
 
 public:
     PenguinCannon(GameObject &associated, std::weak_ptr< GameObject > penguinBody);
