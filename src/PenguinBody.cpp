@@ -91,10 +91,8 @@ void PenguinBody::NotifyCollision(GameObject &other) {
         if (bullet->targetsPlayer)
         {
             this->hp = this->hp - bullet->GetDamage();
-            std::cout << "Penguin hp" << std::to_string(this->hp) << std::endl;
 
             if(this->hp <= 0) {
-                std::cout << "Penguin Morreu" << std::endl;
                 this->associated.RequestDelete();
                 Camera::Unfollow();
 

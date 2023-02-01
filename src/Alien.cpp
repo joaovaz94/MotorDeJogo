@@ -21,7 +21,7 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     Collider *colisor = new Collider(associated);
     associated.AddComponent(colisor);
 
-    speed = Vec2(100, 100);
+    speed = Vec2(1,0);
     hp = 10;
     qtdMinions = nMinions;
 
@@ -55,30 +55,40 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
     if(hp > 0 ){
         if(state == RESTING){
             //std::cout << "Alien decansando, tempo: " << restTimer.Get() << std::endl;
-            if(restTimer.Get() >= 5.0){
+            if(restTimer.Get() >= 0.5){
+                speed = Vec2();
+                //destination = Camera::pos - (Vec2(associated.box.w, associated.box.h)/2);
+                Vec2 posAtual = associated.box.Posicao();
                 destination = Camera::pos + Vec2(GAME_SCREEN_WIDTH / 2, GAME_SCREEN_HEIGHT /2);
-                Vec2 direcao = destination - associated.box.Center();
-                //speed = Vec2::Rotate(speed, direcao.AnguloParaAlvo(speed));
-                speed = speed.GetRotated(associated.box.Center().AnguloParaAlvo(destination));
+                //Vec2 direcao = destination - associated.box.Center();
+                //speed = Vec2::Rotate(speed, -speed.AnguloParaAlvo(direcao));
+                speed = (destination - posAtual).Normalize();
+                //speed = speed.GetRotated(associated.box.Center().AnguloParaAlvo(destination));
+                //speed = (destination - posAtual).Normalize();
+                //speed = speed.Normalize();
                 std::cout << "Alien Speed: " << speed.toStr()  << std::endl;
                 std::cout << "Alien alvo: " << destination.toStr()  << std::endl;
+                std::cout << "Alien pos: " << posAtual.toStr()  << std::endl;
                 state = MOVING;
             }
             restTimer.Update(dt);
         }
         else { 
-            if(associated.box.Center().DistanciaDoVetor(destination) < 100){
+            associated.box.SetPosicao(associated.box.Posicao() + (speed * dt * 300));
+            if(associated.box.Center().DistanciaDoVetor(destination) < 10){
                 destination = Camera::pos + Vec2(GAME_SCREEN_WIDTH / 2, GAME_SCREEN_HEIGHT /2);
+                //destination = Camera::pos - (Vec2(associated.box.w, associated.box.h)/2);
                 std::cout << "Alien vai atirar, alvo: " << destination.toStr()  << std::endl;
                 int minionMaisProximo = GetMinionProximo(destination);
                 std::shared_ptr<GameObject> minionApontado = minionArray[minionMaisProximo].lock();
                 Minion *minionObjeto = (Minion *)minionApontado->GetComponent("Minion");
                 minionObjeto->Shoot(destination);
+                state = RESTING;
+                restTimer.Restart();
             }
-            restTimer.Restart();
-            state = RESTING;
         }
-        associated.box = associated.box + speed * dt;
+            //associated.box = associated.box + speed * dt;
+
     }
     else {
         this->associated.RequestDelete();
