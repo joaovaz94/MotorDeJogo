@@ -7,6 +7,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Timer.h"
+#include "Sound.h"
 
 class Alien : public Component{
     private:

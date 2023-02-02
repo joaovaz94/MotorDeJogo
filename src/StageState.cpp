@@ -1,0 +1,159 @@
+#include "include/StageState.h"
+#include <iostream>
+#include "include/Face.h"
+#include "include/Vec2.h"
+#include <math.h>
+#include "include/TileSet.h"
+#include "include/TileMap.h"
+#include "include/Camera.h"
+#include "include/CameraFollower.h"
+#include "include/Alien.h"
+#include "include/PenguinBody.h"
+#include "Colision.cpp"
+const double PI = M_PI;
+
+
+StageState::StageState() {
+    this->quitRequested = false;
+	started = false;
+
+
+	GameObject *gameObjectFundo = new GameObject();
+	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
+	CameraFollower *cameraFollower =  new CameraFollower(*gameObjectFundo);
+
+	gameObjectFundo->AddComponent(bg);
+	gameObjectFundo->AddComponent(cameraFollower);
+	objectArray.emplace_back(gameObjectFundo);
+	//this->bg->Render();
+
+	GameObject *gameObjectMap = new GameObject();
+
+	TileSet *tileset = new TileSet(64, 64, "assets/img/tileset.png");
+	TileMap *tilemap = new TileMap(*gameObjectMap, "assets/map/tileMap.txt", tileset);
+	gameObjectMap->AddComponent(tilemap);
+	//gameObjectMap->box.x = 0;
+	//gameObjectMap->box.y = 0;
+	gameObjectMap->box.SetPosicao(Vec2(0,0));
+	objectArray.emplace_back(gameObjectMap);
+
+	//Criação de Alien no mapa
+	GameObject *gameObjectAliens = new GameObject();
+	int qtdMinions = 3;
+	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
+	gameObjectAliens->AddComponent(alien);
+	//gameObjectAliens->box.SetPosicaoCentro(700,500);
+	gameObjectAliens->box.SetPosicao((Vec2(512, 300) - gameObjectAliens->box.Medidas())/2);
+
+	AddObject(gameObjectAliens);
+
+	//Criação de Penguin no Jogo
+	GameObject *gameObjectPenguin = new GameObject();
+	PenguinBody *penguinBody = new PenguinBody(*gameObjectPenguin);
+	gameObjectPenguin->AddComponent(penguinBody);
+	gameObjectPenguin->box.SetPosicaoCentro(Vec2(704,640));
+
+	//objectArray.emplace_back(gameObjectPenguin);
+	AddObject(gameObjectPenguin);
+
+	Camera::Follow(gameObjectPenguin);
+
+	
+	music = new Music("assets/audio/stageStageState.ogg");
+    music->Play(-1);
+
+	started = true;
+}
+
+StageState::~StageState() {
+    this->objectArray.clear();
+}
+
+void StageState::Start() {
+	LoadAssets();
+
+	for(int i=0; i < (int)objectArray.size(); i++) {
+		objectArray[i].get()->Start();
+	}
+	started = true;
+}
+
+void StageState::LoadAssets() {
+}
+
+void StageState::Update(float dt){
+	InputManager &input = InputManager::GetInstance();
+	Camera::Update(dt);
+
+	//Checar se o jogador apertou ESC para sair 
+	if(input.IsKeyDown(ESCAPE_KEY) || input.QuitRequested()) {
+		quitRequested = true;
+	}
+
+
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		objectArray[i].get()->Update(dt);
+		//objectArray[i]->Update(dt);
+	}
+
+	std::vector<std::weak_ptr< GameObject >> temCollider;
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		if(objectArray[i].get()->GetComponent("Collider") != nullptr) {
+			temCollider.push_back(objectArray[i]);
+		}
+	}
+	for (int i=0; i < (int)temCollider.size(); i++) {
+		for(int j = i +1; j < temCollider.size();j++){
+			if(Collision::IsColliding(temCollider[i].lock()->box, temCollider[j].lock()->box, temCollider[i].lock()->angleDeg * M_PI / 180, temCollider[j].lock()->angleDeg * M_PI / 180)){
+				GameObject *objeto1 = temCollider[i].lock().get();
+				GameObject *objeto2 = temCollider[j].lock().get();
+				objeto1->NotifyCollision(*objeto2);
+				objeto2->NotifyCollision(*objeto1);
+			}
+		}
+	}
+
+	for (int i=0; i < (int)objectArray.size(); i++) {
+		if(objectArray[i].get()->IsDead()) {
+			objectArray.erase(objectArray.begin() + i);
+		}
+	}
+}
+
+void StageState::Render() {
+    //Trata da Parte 4 de Game::Run
+
+    for(int i = 0; i < (int)objectArray.size(); i++){
+        objectArray[i].get()->Render();
+    }
+}
+
+bool StageState::QuitRequested() {
+    return quitRequested;
+}
+
+
+
+std::weak_ptr< GameObject > StageState::AddObject(GameObject *go) {
+
+	std::shared_ptr< GameObject > ponteirpCompartilhado(go);
+	objectArray.push_back(ponteirpCompartilhado);
+
+	if(started) {
+		ponteirpCompartilhado->Start();
+	}
+	std::weak_ptr < GameObject > ptrRetorno(ponteirpCompartilhado);
+	return ptrRetorno;
+
+}
+
+std::weak_ptr< GameObject > StageState::GetObjectPtr(GameObject *go) {
+	for(int i=0; i < (int)objectArray.size(); i++) {
+		if( objectArray[i].get() == go){
+			std::weak_ptr <GameObject> ptrRetorno(objectArray[i]);
+			return ptrRetorno;
+		}
+	}
+	std::weak_ptr <GameObject> ptrNulo;
+	return ptrNulo;
+}
