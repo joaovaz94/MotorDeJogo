@@ -41,7 +41,7 @@ void Sprite::Open(std::string file) {
         SDL_LogError(0, "Nao foi possivel carregar textura: %s", IMG_GetError());
     }
     if (SDL_QueryTexture(
-            texture,
+            texture.get(),
             nullptr ,
             nullptr, 
             &width, 
@@ -74,7 +74,7 @@ void Sprite::Render(int x, int y, int w, int h) {
     
 
     if(SDL_RenderCopyEx(Game::GetInstance().GetRenderer(),
-        texture, &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
+        texture.get(), &clipRect, &rct, associated.angleDeg, nullptr, SDL_FLIP_NONE)){
             SDL_LogError(0, "Nao conseguiu renderizar a copia: %s", IMG_GetError());
     }
 
