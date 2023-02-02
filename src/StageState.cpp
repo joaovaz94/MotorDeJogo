@@ -1,4 +1,6 @@
 #include "include/StageState.h"
+#include "include/TitleState.h"
+#include "include/Game.h"
 #include <iostream>
 //#include "include/Face.h"
 #include "include/Vec2.h"
@@ -13,7 +15,7 @@
 const double PI = M_PI;
 
 
-StageState::StageState() : backgroundMusic("assets/audio/stageStageState.ogg") {
+StageState::StageState() : backgroundMusic("assets/audio/stageState.ogg") {
 
     this->quitRequested = false;
 	started = false;
@@ -90,8 +92,9 @@ void StageState::Update(float dt){
 	Camera::Update(dt);
 
 	//Checar se o jogador apertou ESC para sair 
-	if(input.IsKeyDown(ESCAPE_KEY) || input.QuitRequested()) {
-		quitRequested = true;
+	if(input.IsKeyDown(ESCAPE_KEY)) {
+		State *state = new TitleState();
+		Game::GetInstance().Push(state);
 	}
 	//Fazer Pause aqui
 
