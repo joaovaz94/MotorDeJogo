@@ -37,7 +37,7 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
  }
  void Alien::Start() {
     //Popular o Array com minions
-    State *state = &Game::GetInstance().GetState();
+    State *state = &Game::GetInstance().GetCurrentState();
     std::weak_ptr<GameObject> alienCenter = state->GetObjectPtr(&associated);
 
     for(int i=0; i < qtdMinions; i++){
@@ -121,7 +121,7 @@ void Alien::NotifyCollision(GameObject &other) {
                 somDeMorte->Play(1);
                 morteDoAlien->AddComponent(somDeMorte);
                 morteDoAlien->box.SetPosicaoCentro(associated.box.Center());
-                Game::GetInstance().GetState().AddObject(morteDoAlien);
+                Game::GetInstance().GetCurrentState().AddObject(morteDoAlien);
             }
         }
     }

@@ -1,6 +1,6 @@
 #include "include/StageState.h"
 #include <iostream>
-#include "include/Face.h"
+//#include "include/Face.h"
 #include "include/Vec2.h"
 #include <math.h>
 #include "include/TileSet.h"
@@ -13,18 +13,19 @@
 const double PI = M_PI;
 
 
-StageState::StageState() {
+StageState::StageState() : backgroundMusic("assets/audio/stageStageState.ogg") {
+
     this->quitRequested = false;
 	started = false;
 
 
 	GameObject *gameObjectFundo = new GameObject();
-	bg = new Sprite(*gameObjectFundo, "assets/img/ocean.jpg");
 	CameraFollower *cameraFollower =  new CameraFollower(*gameObjectFundo);
 
-	gameObjectFundo->AddComponent(bg);
+	gameObjectFundo->AddComponent(new Sprite(*gameObjectFundo, "assets/img/ocean.jpg"));
 	gameObjectFundo->AddComponent(cameraFollower);
-	objectArray.emplace_back(gameObjectFundo);
+	//objectArray.emplace_back(gameObjectFundo);
+	AddObject(gameObjectFundo);
 	//this->bg->Render();
 
 	GameObject *gameObjectMap = new GameObject();
@@ -35,7 +36,8 @@ StageState::StageState() {
 	//gameObjectMap->box.x = 0;
 	//gameObjectMap->box.y = 0;
 	gameObjectMap->box.SetPosicao(Vec2(0,0));
-	objectArray.emplace_back(gameObjectMap);
+	//objectArray.emplace_back(gameObjectMap);
+	AddObject(gameObjectMap);
 
 	//Criação de Alien no mapa
 	GameObject *gameObjectAliens = new GameObject();
@@ -58,11 +60,6 @@ StageState::StageState() {
 
 	Camera::Follow(gameObjectPenguin);
 
-	
-	music = new Music("assets/audio/stageStageState.ogg");
-    music->Play(-1);
-
-	started = true;
 }
 
 StageState::~StageState() {
@@ -72,13 +69,20 @@ StageState::~StageState() {
 void StageState::Start() {
 	LoadAssets();
 
-	for(int i=0; i < (int)objectArray.size(); i++) {
-		objectArray[i].get()->Start();
-	}
+	StartArray();
+	backgroundMusic.Play();
 	started = true;
 }
 
 void StageState::LoadAssets() {
+}
+
+void StageState::Pause() {
+	backgroundMusic.Stop();
+}
+
+void StageState::Resume() {
+	backgroundMusic.Play();
 }
 
 void StageState::Update(float dt){
@@ -89,12 +93,9 @@ void StageState::Update(float dt){
 	if(input.IsKeyDown(ESCAPE_KEY) || input.QuitRequested()) {
 		quitRequested = true;
 	}
+	//Fazer Pause aqui
 
-
-	for (int i=0; i < (int)objectArray.size(); i++) {
-		objectArray[i].get()->Update(dt);
-		//objectArray[i]->Update(dt);
-	}
+	UpdateArray(dt);
 
 	std::vector<std::weak_ptr< GameObject >> temCollider;
 	for (int i=0; i < (int)objectArray.size(); i++) {
@@ -123,37 +124,39 @@ void StageState::Update(float dt){
 void StageState::Render() {
     //Trata da Parte 4 de Game::Run
 
-    for(int i = 0; i < (int)objectArray.size(); i++){
-        objectArray[i].get()->Render();
-    }
+    //for(int i = 0; i < (int)objectArray.size(); i++){
+    //    objectArray[i].get()->Render();
+    //}
+
+	RenderArray();
 }
 
-bool StageState::QuitRequested() {
-    return quitRequested;
-}
+//bool StageState::QuitRequested() {
+//    return quitRequested;
+//}
 
 
 
-std::weak_ptr< GameObject > StageState::AddObject(GameObject *go) {
+//std::weak_ptr< GameObject > StageState::AddObject(GameObject *go) {
+//
+//	std::shared_ptr< GameObject > ponteirpCompartilhado(go);
+//	objectArray.push_back(ponteirpCompartilhado);
+//
+//	if(started) {
+//		ponteirpCompartilhado->Start();
+//	}
+//	std::weak_ptr < GameObject > ptrRetorno(ponteirpCompartilhado);
+//	return ptrRetorno;
+//
+//}
 
-	std::shared_ptr< GameObject > ponteirpCompartilhado(go);
-	objectArray.push_back(ponteirpCompartilhado);
-
-	if(started) {
-		ponteirpCompartilhado->Start();
-	}
-	std::weak_ptr < GameObject > ptrRetorno(ponteirpCompartilhado);
-	return ptrRetorno;
-
-}
-
-std::weak_ptr< GameObject > StageState::GetObjectPtr(GameObject *go) {
-	for(int i=0; i < (int)objectArray.size(); i++) {
-		if( objectArray[i].get() == go){
-			std::weak_ptr <GameObject> ptrRetorno(objectArray[i]);
-			return ptrRetorno;
-		}
-	}
-	std::weak_ptr <GameObject> ptrNulo;
-	return ptrNulo;
-}
+//std::weak_ptr< GameObject > StageState::GetObjectPtr(GameObject *go) {
+//	for(int i=0; i < (int)objectArray.size(); i++) {
+//		if( objectArray[i].get() == go){
+//			std::weak_ptr <GameObject> ptrRetorno(objectArray[i]);
+//			return ptrRetorno;
+//		}
+//	}
+//	std::weak_ptr <GameObject> ptrNulo;
+//	return ptrNulo;
+//}

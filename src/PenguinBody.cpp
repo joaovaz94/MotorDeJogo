@@ -1,6 +1,7 @@
 #include "include/PenguinBody.h"
 #include "include/PenguinCannon.h"
 #include "include/State.h"
+#include "include/Sound.h"
 #include "include/Game.h"
 #include "include/Sprite.h"
 #include "include/Collider.h"
@@ -29,7 +30,7 @@ PenguinBody::~PenguinBody() {
 
 void PenguinBody::Start() {
 
-    State *state = &Game::GetInstance().GetState();
+    State *state = &Game::GetInstance().GetCurrentState();
 
     GameObject *objetoCanhao = new GameObject();
     PenguinCannon *penguinCanhao = new PenguinCannon(*objetoCanhao, state->GetObjectPtr(&associated)); 
@@ -84,7 +85,7 @@ bool PenguinBody::Is(std::string type) {
 }
 
 void PenguinBody::NotifyCollision(GameObject &other) {
-    State *state = &Game::GetInstance().GetState();
+    State *state = &Game::GetInstance().GetCurrentState();
     if (other.GetComponent("Bullet") != nullptr)
     {
         Bullet *bullet = (Bullet *)other.GetComponent("Bullet");

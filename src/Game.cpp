@@ -3,14 +3,18 @@
 #include <iostream>
 
 //Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
-Game *Game::instance = nullptr;
+Game *Game::instance;
+std::stack<std::unique_ptr<State>> Game::stateStack;
+State *Game::storedState;
 
 //Definição de método de retornar instnacia de Game de acordo com padrãp Singleton
 Game& Game::GetInstance() {
 
     if(Game::instance == nullptr) {
-        Game::instance = new Game("Janela", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
-        std::cout << "Jogo iniciado em GetInstance\n";
+        //Game::instance = new Game("Janela", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
+        //std::cout << "Jogo iniciado em GetInstance\n";
+
+        new Game("João Paulo Vaz Mendes - 170002934", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
     }
     return *Game::instance;
 }

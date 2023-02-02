@@ -1,15 +1,15 @@
-#include <string>
-#include <iostream>
 #include "include/Game.h"
+#include "include/StageState.h"
 
 
 int main(int argc, char** argv) {
 
-        //Game *game = nullptr;
-        Game *game = new Game("João Paulo Vaz Mendes - 170002934", 1024, 600);
-        *game = game->GetInstance();
-        game->Run();
+        Game game = Game::GetInstance();
+        //*game = game->GetInstance();
+        State *initialState = new StageState();
+        game.Push(initialState);
+        game.Run();
 
-        delete game;
+        //delete game;
         return 0;
 }

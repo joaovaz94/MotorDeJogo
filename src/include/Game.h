@@ -10,6 +10,7 @@
 #include "SDL_include.h"
 #include "State.h"
 #include "InputManager.h"
+#include "Resources.h"
 #include <iostream>
 #include <string>
 #include <stack>
@@ -22,10 +23,10 @@ class Game {
     private:
         static Game* instance;
 
-        State* storedState;
+        static State* storedState;
         SDL_Window* window;
         SDL_Renderer* renderer;
-        std::stack<std::unique_ptr<State>> stateStack;
+        static std::stack<std::unique_ptr<State>> stateStack;
 
         int frameStart;
         float dt;

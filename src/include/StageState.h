@@ -3,35 +3,41 @@
 
 #include "Sprite.h"
 #include "Music.h"
-#include "Sound.h"
-#define INCLUDE_SDL 
-#include "SDL_include.h"
-#include "GameObject.h"
-#include "InputManager.h"
-#include <vector>
-#include <memory>
+#include "State.h"
+#include "TileSet.h"
+//#include "Sound.h"
+//#define INCLUDE_SDL 
+//#include "SDL_include.h"
+//#include "GameObject.h"
+//#include "InputManager.h"
+//#include <vector>
+//#include <memory>
 
 
-class StageState {
+class StageState : public State {
 
     private:
-        Sprite *bg;
-        Music *music;
-        bool quitRequested;
-        bool started;
-        std::vector<std::shared_ptr<GameObject>> objectArray;
+        //Sprite *bg;
+        //Music *music;
+        //bool quitRequested;
+        //bool started;
+        //std::vector<std::shared_ptr<GameObject>> objectArray;
 
+        TileSet *tileSet;
+        Music backgroundMusic;
 
     public:
         StageState();
         ~StageState();
 
         void Start();
+        void Pause();
+        void Resume();
 
         //void Input();
-        std::weak_ptr< GameObject > AddObject(GameObject *go);
-        std::weak_ptr< GameObject > GetObjectPtr(GameObject *go);
-        bool QuitRequested();
+        //std::weak_ptr< GameObject > AddObject(GameObject *go);
+        //std::weak_ptr< GameObject > GetObjectPtr(GameObject *go);
+        //bool QuitRequested();
 
         void LoadAssets();
         void Update(float dt);
