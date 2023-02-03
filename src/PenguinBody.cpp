@@ -65,7 +65,10 @@ void PenguinBody::Update(float dt) {
         }
         speed = speed.Normalize();
         Vec2 variacao = (speed * (dt * linearSpeed));
-        associated.box = associated.box + variacao;
+
+        if(variacao.x > -40 && variacao.x < 1340 && variacao.y > -10 && variacao.y < 1280 ){
+            associated.box = associated.box + variacao;
+        }
         associated.angleDeg = speed.atan() * 180 / M_PI;
     //}
 }

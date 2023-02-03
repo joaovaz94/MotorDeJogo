@@ -1,6 +1,8 @@
 #include "include/StageState.h"
 #include "include/TitleState.h"
+#include "include/EndState.h"
 #include "include/Game.h"
+#include "include/GameData.h"
 #include <iostream>
 //#include "include/Face.h"
 #include "include/Vec2.h"
@@ -17,8 +19,8 @@ const double PI = M_PI;
 
 StageState::StageState() : backgroundMusic("assets/audio/stageState.ogg") {
 
-    this->quitRequested = false;
-	started = false;
+    //this->quitRequested = false;
+	//started = false;
 
 
 	GameObject *gameObjectFundo = new GameObject();
@@ -42,14 +44,13 @@ StageState::StageState() : backgroundMusic("assets/audio/stageState.ogg") {
 	AddObject(gameObjectMap);
 
 	//Criação de Alien no mapa
-	GameObject *gameObjectAliens = new GameObject();
-	int qtdMinions = 3;
-	Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
-	gameObjectAliens->AddComponent(alien);
-	//gameObjectAliens->box.SetPosicaoCentro(700,500);
-	gameObjectAliens->box.SetPosicao((Vec2(512, 300) - gameObjectAliens->box.Medidas())/2);
+	//int qtdMinions = 3;
+	//Alien *alien = new Alien(*gameObjectAliens, qtdMinions);
+	//gameObjectAliens->AddComponent(alien);
+	////gameObjectAliens->box.SetPosicaoCentro(700,500);
+	//gameObjectAliens->box.SetPosicao((Vec2(512, 300) - gameObjectAliens->box.Medidas())/2);
 
-	AddObject(gameObjectAliens);
+	//AddObject(gameObjectAliens);
 
 	//Criação de Penguin no Jogo
 	GameObject *gameObjectPenguin = new GameObject();
@@ -61,6 +62,22 @@ StageState::StageState() : backgroundMusic("assets/audio/stageState.ogg") {
 	AddObject(gameObjectPenguin);
 
 	Camera::Follow(gameObjectPenguin);
+
+	int maxAliens = (int)(((float)rand() / RAND_MAX * (6-1)) + 1);
+	float offsetTempo;
+	int novoXAlien, novoYAlien;
+
+	GameObject *gameObjectAlien;
+
+	for(int i = 0; i < maxAliens; i++){
+		gameObjectAlien = new GameObject();
+		offsetTempo  = (int)(((float)rand() / RAND_MAX + i) / pow(10, i));
+		gameObjectAlien->AddComponent(new Alien(*gameObjectAlien, offsetTempo));
+		novoXAlien = (int)(((float)rand() / RAND_MAX * (1340 + 40)) - 40); 
+		novoYAlien = (int)(((float)rand() / RAND_MAX * (1280 + 10)) - 10); 
+		gameObjectAlien->box.SetPosicaoCentro(novoXAlien - gameObjectAlien->box.w /2,novoYAlien - gameObjectAlien->box.h /2 );
+		AddObject(gameObjectAlien);
+	}
 
 }
 
@@ -121,6 +138,18 @@ void StageState::Update(float dt){
 		if(objectArray[i].get()->IsDead()) {
 			objectArray.erase(objectArray.begin() + i);
 		}
+	}
+
+	if(Alien::alienCount <= 0){
+		GameData::playerVictory = true;
+		popRequested = true;
+		Game::GetInstance().Push(new EndState());
+	}
+
+	if(PenguinBody::player == nullptr){
+		GameData::playerVictory = false;
+		popRequested = true;
+		Game::GetInstance().Push(new EndState());
 	}
 }
 

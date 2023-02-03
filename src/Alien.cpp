@@ -13,7 +13,7 @@
 
 int Alien::alienCount = 0;
 
-Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
+Alien::Alien(GameObject &associated, float setTimeOffset) : Component(associated) {
     
     Sprite *spriteAlien = new Sprite(associated, "assets/img/alien.png");
     associated.AddComponent(spriteAlien);
@@ -23,9 +23,11 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
 
     speed = Vec2(1,0);
     hp = 10;
-    qtdMinions = nMinions;
+    qtdMinions = 3;
 
+    timeOffset = setTimeOffset;
     state = RESTING;
+    
 
     alienCount++;
 
@@ -61,11 +63,14 @@ Alien::Alien(GameObject &associated, int nMinions) : Component(associated) {
             speed = (destination - posAtual).Normalize();
             state = MOVING;
         }
-        restTimer.Update(dt);
+        restTimer.Update(dt + timeOffset);
     }
     else
     {
-        associated.box.SetPosicao(associated.box.Posicao() + (speed * dt * 300));
+        Vec2 novaPos = associated.box.Posicao() + (speed * dt * 300);
+        if(novaPos.x > -40 && novaPos.x < 1340 && novaPos.y > -10 && novaPos.y < 1280 ){
+            associated.box.SetPosicao(associated.box.Posicao() + (speed * dt * 300));
+        }
         if (associated.box.Center().DistanciaDoVetor(destination) < 100)
         {
             destination = Camera::pos + Vec2(GAME_SCREEN_WIDTH / 2, GAME_SCREEN_HEIGHT / 2);

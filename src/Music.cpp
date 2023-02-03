@@ -16,12 +16,12 @@ void Music::Play(int times ) {
 
     std::cout << "musica: " << this->music << std::endl;
     if(IsOpen()){
-        
+       
         if(Mix_PlayMusic(music, times) == -1) {
             std::cout << "Problema em Mix_PlayMusic: " << Mix_GetError() << std::endl;
         }
     }
-
+    
 }
 
 void Music::Stop(int msToStop) {
