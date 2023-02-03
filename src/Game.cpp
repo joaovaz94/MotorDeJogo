@@ -3,14 +3,18 @@
 #include <iostream>
 
 //Inicializa ponteiro para zero para ser inicializado na primeira chamada do GetInstance
-Game *Game::instance = nullptr;
+Game *Game::instance;
+std::stack<std::unique_ptr<State>> Game::stateStack;
+State *Game::storedState;
 
 //Definição de método de retornar instnacia de Game de acordo com padrãp Singleton
 Game& Game::GetInstance() {
 
     if(Game::instance == nullptr) {
-        Game::instance = new Game("Janela", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
-        std::cout << "Jogo iniciado em GetInstance\n";
+        //Game::instance = new Game("Janela", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
+        //std::cout << "Jogo iniciado em GetInstance\n";
+
+        new Game("João Paulo Vaz Mendes - 170002934", GAME_SCREEN_WIDTH, GAME_SCREEN_HEIGHT);
     }
     return *Game::instance;
 }
@@ -77,10 +81,14 @@ Game::Game(std::string title, int widith, int height){
         std::cout << "Erro: " << Mix_GetError();
         std::cout << "Erro ao iniciar OpenAudio";
     }
+    if(TTF_Init() != 0) {
+        SDL_LogError(0, "Erro ao inicializar o TTF: %s", SDL_GetError());
+        throw "Erro ao inicializar TTF";
+    }
     //Alocação do número de trilhas de audio
     Mix_AllocateChannels(32);
 
-    this->state = new State();
+    this->storedState = nullptr;
 
 }
 
@@ -90,34 +98,65 @@ Game::~Game() {
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
+    if(storedState != nullptr) {
+        delete storedState;
+    }
 }
 
-State& Game::GetState() {
-    return *(this->state);
+State& Game::GetCurrentState() {
+    State *cState = stateStack.top().get();
+    return *cState;
 }
 
 SDL_Renderer* Game::GetRenderer() {
    return this->renderer; 
 }
 
+void Game::Push(State *state) {
+    this->storedState = state;
+}
+
 void Game::Run() {
     //Fazer loop de jogo
-    state->Start();
-    while(!state->QuitRequested()) {
+    stateStack.emplace(storedState);
+    stateStack.top()->Start();
+    storedState = nullptr;
+
+    while((!stateStack.empty()) && !(stateStack.top()->QuitRequested()) ) {
+
+        if(stateStack.top()->PopRequested()) {
+            stateStack.pop();
+            Resources::ClearImages();
+            if(!stateStack.empty()) {
+                stateStack.top()->Resume();
+            }
+        }
+
+        if(storedState != nullptr) {
+            stateStack.top()->Pause();
+            stateStack.emplace(storedState);
+            stateStack.top()->Start();
+            storedState = nullptr;
+        }
         CalculateDeltaTime();
         //Que faz
         //1. Verifica, controla e carrega as telas de jogo
         //2. Os dados de input são recebidos e processados
         InputManager::GetInstance().Update();
         //3. Osobjetos tem seus respectivos estados (posição, HP, ...)
-        state->Update(GetDeltaTime());// Descobrir qual float passar como parametro
+        stateStack.top()->Update(GetDeltaTime());// Descobrir qual float passar como parametro
         //4. Os objetos são desenhados na tela
-        state->Render();
+        stateStack.top()->Render();
         SDL_RenderPresent(this->renderer);
         SDL_Delay(33);
     } //Fim do Loop
 
+    //Pegar próximo da pilha enquanto ainda houver
+    while(!stateStack.empty()){
+        stateStack.pop();
+    }
     //Liberar Recursos Carregados depois do Fim do Loop do Jogo
     Resources::ClearImages();
     Resources::ClearMusics();

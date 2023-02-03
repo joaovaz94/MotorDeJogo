@@ -51,3 +51,7 @@ void Camera::Update(float dt) {
         pos = pos + (speed * dt * 200) ;
     }
 }
+
+void Camera::Reset() {
+    Camera::pos = {0,0};
+}

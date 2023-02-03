@@ -2,6 +2,7 @@
 #define RESOURCES_H_INCLUDED
 
 #include <string>
+#include <memory>
 #include <unordered_map>
 #define INCLUDE_SDL_MIXER
 #define INCLUDE_SDL_IMAGE
@@ -11,7 +12,7 @@ class Resources {
 
     private:
 
-        static std::unordered_map<std::string, SDL_Texture *> imageTable;
+        static std::unordered_map<std::string, std::shared_ptr<SDL_Texture>> imageTable;
         static std::unordered_map<std::string, Mix_Music *> musicTable;
         static std::unordered_map<std::string, Mix_Chunk *> soundTable;
 
@@ -20,7 +21,7 @@ class Resources {
         Resources();
         ~Resources();
 
-        static SDL_Texture* GetImage(std::string);
+        static std::shared_ptr<SDL_Texture> GetImage(std::string);
         static void ClearImages();
 
         static Mix_Music* GetMusic(std::string file);

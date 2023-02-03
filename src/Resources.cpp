@@ -1,7 +1,7 @@
 #include "include/Resources.h"
 #include "include/Game.h"
 
-std::unordered_map<std::string, SDL_Texture *> Resources::imageTable;
+std::unordered_map<std::string, std::shared_ptr<SDL_Texture>> Resources::imageTable;
 std::unordered_map<std::string, Mix_Music *> Resources::musicTable;
 std::unordered_map<std::string, Mix_Chunk *> Resources::soundTable;
 
@@ -13,34 +13,45 @@ Resources::~Resources() {
 
 }
 
-SDL_Texture *Resources::GetImage( std::string file) {
+std::shared_ptr<SDL_Texture> Resources::GetImage( std::string file) {
 
     //Consultar tabela de imagem se a imagem já existe nela
-    std::unordered_map<std::string, SDL_Texture *>::const_iterator imagemPedida = imageTable.find(file);
+    //std::unordered_map<std::string, SDL_Texture *>::const_iterator imagemPedida = imageTable.find(file);
 
-    if(imagemPedida != imageTable.end()){
-        //Caso se encontre a imagem na tabela, retorna ela
-        return imagemPedida->second; 
+    if(imageTable.find(file) != imageTable.end()) {
+        return imageTable[file];
     }
-    else{
-        //Senão aloca uma nova textura
-        SDL_Texture *novaTextura = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
-        if(novaTextura == nullptr){
-            std::cout << "Erro: " << SDL_GetError();
-            std::cout << "Erro ao carregar Sprite\n";
-        }
-        //Adiciona na Tabela
-        imageTable.insert(std::make_pair(file, novaTextura));
-        //E retorna na função
-        return novaTextura;
-    }
+
+    SDL_Texture *texture = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
+    imageTable[file] = std::shared_ptr<SDL_Texture>(texture, [](SDL_Texture *ptr) { SDL_DestroyTexture(ptr); });
+
+    return imageTable[file];
+
+    //if(imagemPedida != imageTable.end()){
+    //    //Caso se encontre a imagem na tabela, retorna ela
+    //    return imagemPedida->second; 
+    //}
+    //else{
+    //    //Senão aloca uma nova textura
+    //    SDL_Texture *novaTextura = IMG_LoadTexture(Game::GetInstance().GetRenderer(), file.c_str());
+    //    if(novaTextura == nullptr){
+    //        std::cout << "Erro: " << SDL_GetError();
+    //        std::cout << "Erro ao carregar Sprite\n";
+    //    }
+    //    //Adiciona na Tabela
+    //    imageTable.insert(std::make_pair(file, novaTextura));
+    //    //E retorna na função
+    //    return novaTextura;
+    //}
 }
 
 void Resources::ClearImages() {
-    for(auto& elementoTabela: imageTable) {
-        SDL_DestroyTexture(elementoTabela.second);
-        elementoTabela.second = nullptr;
-    }
+    //for(auto& elementoTabela: imageTable) {
+    //    SDL_DestroyTexture(elementoTabela.second);
+    //    elementoTabela.second = nullptr;
+    //}
+
+    Resources::imageTable.clear();
 }
 
 Mix_Music *Resources::GetMusic(std::string file) {

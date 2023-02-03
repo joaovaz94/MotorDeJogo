@@ -75,7 +75,7 @@ void PenguinCannon::Shoot() {
     Bullet *bullet = new Bullet(*objetoBullet, angulo, 300, 5, 800,"assets/img/penguinbullet.png", 4, 0.2, false);
     objetoBullet->AddComponent(bullet);
 
-    State *state = &Game::GetInstance().GetState();
+    State *state = &Game::GetInstance().GetCurrentState();
     state->AddObject(objetoBullet);
 }
 

@@ -7,6 +7,7 @@
 #include "Component.h"
 #include "GameObject.h"
 #include "Timer.h"
+#include "Sound.h"
 
 class Alien : public Component{
     private:
@@ -14,6 +15,7 @@ class Alien : public Component{
         Vec2 speed;
         int hp;
         int qtdMinions;
+        float timeOffset;
 
         std::vector <std::weak_ptr<GameObject>> minionArray;
 
@@ -24,7 +26,7 @@ class Alien : public Component{
 
     public:
 
-        Alien(GameObject &associated, int nMinions);
+        Alien(GameObject &associated, float setTimeOffset = 0);
         ~Alien();
 
         void Start();
