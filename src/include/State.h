@@ -1,41 +1,43 @@
 #ifndef STATE_H_INCLUDED
 #define STATE_H_INCLUDED
 
-#include "Sprite.h"
-#include "Music.h"
-#include "Sound.h"
-#define INCLUDE_SDL 
-#include "SDL_include.h"
 #include "GameObject.h"
-#include "InputManager.h"
 #include <vector>
 #include <memory>
+#include <string>
 
+class State
+{
+public:
+    State();
+    virtual ~State();
 
-class State {
+    virtual void LoadAssets() = 0;
+    virtual void Update(float dt) = 0;
+    virtual void Render() = 0;
 
-    private:
-        Sprite *bg;
-        Music *music;
-        bool quitRequested;
-        bool started;
-        std::vector<std::shared_ptr<GameObject>> objectArray;
+    virtual void Start() = 0;
+    virtual void Pause() = 0;
+    virtual void Resume() = 0;
 
+    virtual std::weak_ptr< GameObject > AddObject(GameObject* object);
+    virtual std::weak_ptr< GameObject > GetObjectPtr(GameObject* object);
 
-    public:
-        State();
-        ~State();
+    bool PopRequested();
+    bool QuitRequested();
 
-        void Start();
+protected:
+    void StartArray();
+    virtual void UpdateArray(float dt);
+    virtual void RenderArray();
 
-        //void Input();
-        std::weak_ptr< GameObject > AddObject(GameObject *go);
-        std::weak_ptr< GameObject > GetObjectPtr(GameObject *go);
-        bool QuitRequested();
+    bool popRequested;
+    bool quitRequested;
+    bool started;
 
-        void LoadAssets();
-        void Update(float dt);
-        void Render();
+    std::vector<std::shared_ptr<GameObject>> objectArray;
+
 };
+
 
 #endif //STATE_H_INCLUDED

@@ -24,7 +24,7 @@ void Music::Play(int times ) {
 
 }
 
-void Music::Stop(int msToStop = 1500) {
+void Music::Stop(int msToStop) {
 
     Mix_FadeOutMusic(msToStop);
 }
