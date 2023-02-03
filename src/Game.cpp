@@ -81,6 +81,10 @@ Game::Game(std::string title, int widith, int height){
         std::cout << "Erro: " << Mix_GetError();
         std::cout << "Erro ao iniciar OpenAudio";
     }
+    if(TTF_Init() != 0) {
+        SDL_LogError(0, "Erro ao inicializar o TTF: %s", SDL_GetError());
+        throw "Erro ao inicializar TTF";
+    }
     //Alocação do número de trilhas de audio
     Mix_AllocateChannels(32);
 
@@ -94,6 +98,7 @@ Game::~Game() {
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
     if(storedState != nullptr) {
         delete storedState;
